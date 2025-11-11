@@ -8,15 +8,6 @@ datasource db {
   // directUrl = env("DIRECT_URL")
 }
 
-model Perro {
-  id       Int     @id @default(autoincrement())
-  nombre   String
-  raza     String
-  edad     Int
-  peso     Float
-  vacunado Boolean
-}
-
 enum ROLE {
   TOURIST
   WORKER
@@ -29,6 +20,13 @@ enum GENDER {
   OTHER
 }
 
+enum STATUS {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 model User {
   id Int @id @default(autoincrement())
   firstName String
@@ -39,4 +37,16 @@ model User {
   age Int
   gender GENDER
   role ROLE
+}
+
+model Trip {
+  id Int @id @default(autoincrement())
+  pickup_time DateTime
+  whatsApp_group_link String?
+  party_size Int
+  pickup_location String
+  dropoff_location String
+  status STATUS @default(PENDING)
+
+  
 }
