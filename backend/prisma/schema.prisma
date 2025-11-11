@@ -1,19 +1,42 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
-        
-        
-model Perro{
-  id        Int      @id @default(autoincrement())
-  nombre    String
-  raza      String
-  edad      Int
-  peso      Float
-  vacunado  Boolean
+
+model Perro {
+  id       Int     @id @default(autoincrement())
+  nombre   String
+  raza     String
+  edad     Int
+  peso     Float
+  vacunado Boolean
+}
+
+enum ROLE {
+  TOURIST
+  WORKER
+  COMPANY
+}
+
+enum GENDER {
+  MALE 
+  FEMALE
+  OTHER
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  phone String
+  mail String @unique
+  phoneAlt String?
+  age Int
+  gender GENDER
+  role ROLE
 }
