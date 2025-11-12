@@ -15,7 +15,7 @@ enum ROLE {
 }
 
 enum GENDER {
-  MALE 
+  MALE
   FEMALE
   OTHER
 }
@@ -28,25 +28,72 @@ enum STATUS {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   firstName String
-  lastName String
-  phone String
-  mail String @unique
-  phoneAlt String?
-  age Int
-  gender GENDER
-  role ROLE
+  lastName  String
+  phone     String
+  phoneAlt  String?
+  mail      String  @unique
+  age       Int
+  gender    GENDER
+  role      ROLE @default(TOURIST)
+
+  touristTrips   Trip[] @relation("TouristTrips")
+  driverTrips    Trip[] @relation("DriverTrips")
+  salesmanTrips  Trip[] @relation("SalesmanTrips")
+  transportTrips Trip[] @relation("TransportTrips")
+
+  company Company?
+}
+
+model Company {
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int    @unique
+
+  user  User   @relation(fields: [userId], references: [id])
+  tours Tour[]
+  trips Trip[] @relation("CompanyTrips")
+}
+
+model Tour {
+  id          Int     @id @default(autoincrement())
+  name        String
+  place       String
+  occupancy   Int
+  description String?
+
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+
+  trips Trip[]
 }
 
 model Trip {
   id Int @id @default(autoincrement())
-  pickup_time DateTime
-  whatsApp_group_link String?
-  party_size Int
-  pickup_location String
-  dropoff_location String
-  status STATUS @default(PENDING)
 
-  
+  touristId Int
+  tourist   User @relation("TouristTrips", fields: [touristId], references: [id])
+
+  companyId Int
+  company   Company @relation("CompanyTrips", fields: [companyId], references: [id])
+
+  driverId Int?
+  driver   User? @relation("DriverTrips", fields: [driverId], references: [id])
+
+  salesmanId Int?
+  salesman   User? @relation("SalesmanTrips", fields: [salesmanId], references: [id])
+
+  transportCompanyId Int?
+  transportCompany   User? @relation("TransportTrips", fields: [transportCompanyId], references: [id])
+
+  tourId Int
+  tour   Tour @relation(fields: [tourId], references: [id])
+
+  pickup_time         DateTime
+  whatsApp_group_link String?
+  party_size          Int
+  pickup_location     String
+  dropoff_location    String
+  status              STATUS   @default(PENDING)
 }
