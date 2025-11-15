@@ -13,8 +13,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Import Routes
+const tourRoutes = require("./routes/tour");
+
 app.get("/", (req, res) => {
   res.send("PilloVan Backend is running!");
 });
+
+app.use("/tour", tourRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
