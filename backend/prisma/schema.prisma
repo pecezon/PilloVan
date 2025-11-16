@@ -12,6 +12,7 @@ enum ROLE {
   TOURIST
   WORKER
   COMPANY
+  ADMIN
 }
 
 enum GENDER {
@@ -29,14 +30,17 @@ enum STATUS {
 
 model User {
   id        Int     @id @default(autoincrement())
-  firstName String
-  lastName  String
-  phone     String
+  auth_id            String @unique
+  firstName String?
+  lastName  String?
+  phone     String?
   phoneAlt  String?
-  mail      String  @unique
-  age       Int
-  gender    GENDER
+  email     String  @unique
+  age       Int?
+  gender    GENDER?
   role      ROLE @default(TOURIST)
+  finishedOnboarding Boolean  @default(false)
+  createdAt          DateTime @default(now())
 
   touristTrips   Trip[] @relation("TouristTrips")
   driverTrips    Trip[] @relation("DriverTrips")
