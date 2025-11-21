@@ -1,50 +1,37 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { supabase } from "../supabaseClient";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { Button } from "@heroui/react";
+import Onboarding from "./pages/Onboarding";
+import Landing from "./pages/Landing";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import OnboardingRoute from "./auth/OnboardingRoute";
+import Homepage from "./pages/Homepage";
 
 function App() {
-  const [session, setSession] = useState(null);
+  return (
+    <Routes>
+      <Route path="/" element={<Landing />} />
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute>
+            <OnboardingRoute>
+              <Onboarding />
+            </OnboardingRoute>
+          </ProtectedRoute>
+        }
+      />
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-  };
-
-  const signIn = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-  };
-
-  if (!session) {
-    return (
-      <>
-        <button onClick={signIn}>Sign In</button>
-        <Button color="primary">Hola</Button>
-      </>
-    );
-  } else {
-    return (
-      <div>
-        Logged in!
-        <button onClick={signOut}>Sign Out</button>
-      </div>
-    );
-  }
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <Homepage />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
 }
 
 export default App;
