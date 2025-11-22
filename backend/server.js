@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 
 // Initialize Express App
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -31,4 +31,6 @@ app.use("/tour", tourRoutes);
 app.use("/user", userRoutes);
 
 // Start Server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+);
