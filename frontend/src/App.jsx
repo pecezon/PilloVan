@@ -3,7 +3,6 @@ import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import OnboardingRoute from "./auth/OnboardingRoute";
 import Homepage from "./pages/Homepage";
 
 function App() {
@@ -15,9 +14,7 @@ function App() {
         path="/onboarding"
         element={
           <ProtectedRoute>
-            <OnboardingRoute>
-              <Onboarding />
-            </OnboardingRoute>
+            <Onboarding />
           </ProtectedRoute>
         }
       />

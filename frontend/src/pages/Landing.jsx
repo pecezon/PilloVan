@@ -10,9 +10,33 @@ import { Navigate } from "react-router-dom";
 export default function Landing() {
   const { user, loading, loginWithGoogle } = useAuth();
 
+  const [hasOnboarded, setHasOnboarded] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from("users")
+        .select("finishedOnboarding")
+        .eq("auth_id", user.id)
+        .single();
+
+      console.log("Onboarding status:", data);
+      console.log("user:", user);
+
+      setHasOnboarded(data?.finishedOnboarding);
+    };
+
+    fetchProfile();
+  }, [user]);
+
   if (loading) return null;
 
-  if (user) return <Navigate to="/home" />;
+  if (!hasOnboarded && hasOnboarded !== null)
+    return <Navigate to="/onboarding" />;
+
+  if (hasOnboarded && hasOnboarded !== null) return <Navigate to="/home" />;
 
   return (
     <div className="w-full h-screen bg-cover bg-center bg-no-repeat bg-[url('/images/playa-del-carmen.avif')] md:bg-[url('/images/riviera-maya.jpg')]">
