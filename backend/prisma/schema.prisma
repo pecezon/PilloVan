@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
 }
 
 enum ROLE {
@@ -29,34 +28,19 @@ enum STATUS {
 }
 
 model users {
-  id        Int     @id @default(autoincrement())
-  auth_id            String @unique
-  firstName String?
-  lastName  String?
-  phone     String?
-  phoneAlt  String?
-  email     String  @unique
-  age       Int?
-  gender    GENDER?
-  role      ROLE @default(TOURIST)
+  auth_id            String @id @unique
+  firstName          String?
+  lastName           String?
+  phone              String?
+  phoneAlt           String?
+  email              String? @unique
+  age                Int?
+  gender             GENDER?
+  role               ROLE @default(TOURIST)
   finishedOnboarding Boolean @default(false)
   createdAt          DateTime @default(now())
-  touristTrips   Trip[] @relation("TouristTrips")
-  driverTrips    Trip[] @relation("DriverTrips")
-  salesmanTrips  Trip[] @relation("SalesmanTrips")
-  transportTrips Trip[] @relation("TransportTrips")
-
-  company Company?
-}
-
-model Company {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int    @unique
-
-  user  users   @relation(fields: [userId], references: [id])
-  tours Tour[]
-  trips Trip[] @relation("CompanyTrips")
+  tours              Tour[]
+  tripRoles          TripUsers[]
 }
 
 model Tour {
@@ -66,29 +50,14 @@ model Tour {
   occupancy   Int
   description String?
 
-  companyId Int
-  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+  company   users @relation(fields: [companyId], references: [auth_id])
 
   trips Trip[]
 }
 
 model Trip {
   id Int @id @default(autoincrement())
-
-  touristId Int
-  tourist   users @relation("TouristTrips", fields: [touristId], references: [id])
-
-  companyId Int
-  company   Company @relation("CompanyTrips", fields: [companyId], references: [id])
-
-  driverId Int?
-  driver   users? @relation("DriverTrips", fields: [driverId], references: [id])
-
-  salesmanId Int?
-  salesman   users? @relation("SalesmanTrips", fields: [salesmanId], references: [id])
-
-  transportCompanyId Int?
-  transportCompany   users? @relation("TransportTrips", fields: [transportCompanyId], references: [id])
 
   tourId Int
   tour   Tour @relation(fields: [tourId], references: [id])
@@ -99,4 +68,17 @@ model Trip {
   pickup_location     String
   dropoff_location    String
   status              STATUS   @default(PENDING)
+
+  users TripUsers[]
+}
+
+model TripUsers {
+  tripId Int
+  userId String
+  role   ROLE?
+
+  trip Trip  @relation(fields: [tripId], references: [id])
+  user users @relation(fields: [userId], references: [auth_id])
+
+  @@id([tripId, userId])
 }
