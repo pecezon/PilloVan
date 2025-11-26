@@ -35,6 +35,7 @@ model users {
   phoneAlt           String?
   email              String? @unique
   age                Int?
+  whapi_id           String? @unique
   gender             GENDER?
   role               ROLE @default(TOURIST)
   finishedOnboarding Boolean @default(false)
