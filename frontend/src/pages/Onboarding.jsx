@@ -6,6 +6,7 @@ import { useAuth } from "../auth/AuthContext";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import isPhoneValid from "../utils/validatePhoneNumber";
+import { createWhapiContact } from "../utils/createWhapiContact";
 
 export default function Onboarding() {
   const { user, loading, logout } = useAuth();
@@ -21,10 +22,6 @@ export default function Onboarding() {
         .select("finishedOnboarding")
         .eq("auth_id", user.id)
         .single();
-
-      console.log("Onboarding status:", data);
-      console.log("user:", user);
-
       setHasOnboarded(data?.finishedOnboarding);
     };
 
@@ -52,6 +49,15 @@ export default function Onboarding() {
         onSubmit={async (e) => {
           e.preventDefault();
 
+          const whapi_id = await createWhapiContact({
+            phone: profile.phone,
+            name: `${profile.firstName} ${profile.lastName}`,
+          });
+
+          if (!whapi_id) {
+            console.error("Error creating WhatsApp contact:", contactError);
+          }
+
           const { error } = await supabase
             .from("users")
             .update({
@@ -61,12 +67,12 @@ export default function Onboarding() {
               gender: profile.gender,
               age: parseInt(profile.age),
               finishedOnboarding: true,
+              whapi_id: whapi_id || null,
             })
             .eq("auth_id", user.id);
           if (error) {
             console.error("Error updating profile:", error);
           } else {
-            console.log("Profile updated successfully");
             window.location.href = "/home";
           }
         }}
@@ -75,7 +81,6 @@ export default function Onboarding() {
             ...profile,
             [e.target.name]: e.target.value,
           });
-          console.log(profile);
         }}
       >
         <Input

@@ -13,6 +13,7 @@ export default function UserDropdown({ user, logout }) {
       <DropdownTrigger>
         <Avatar
           isBordered
+          showFallback
           as="button"
           className="transition-transform"
           src={user?.user_metadata?.avatar_url}
@@ -25,7 +26,9 @@ export default function UserDropdown({ user, logout }) {
       >
         <DropdownItem key="profile" className="h-14 gap-2">
           <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold">{user?.user_metadata?.email}</p>
+          <p className="font-semibold">
+            {user?.user_metadata?.email || "Unknown User"}
+          </p>
         </DropdownItem>
         <DropdownItem key="settings">My Settings</DropdownItem>
         <DropdownItem key="logout" color="danger" onPress={logout}>

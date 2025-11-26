@@ -8,9 +8,15 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import NewTourModal from "./NewTourModal";
+import NewTripModal from "./NewTripModal";
 
 export default function CreationMenu() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isTripOpen,
+    onOpen: onTripOpen,
+    onOpenChange: onTripOpenChange,
+  } = useDisclosure();
 
   return (
     <>
@@ -34,7 +40,7 @@ export default function CreationMenu() {
           <DropdownItem key="profile" className="h-10 gap-2">
             <p className="font-semibold">Create New:</p>
           </DropdownItem>
-          <DropdownItem key="trip" startContent>
+          <DropdownItem key="trip" startContent onPress={onTripOpen}>
             <i className="fa-solid fa-bus pr-2 text-gray-500"></i>
             Trip
           </DropdownItem>
@@ -48,6 +54,11 @@ export default function CreationMenu() {
         isOpen={isOpen}
         onOpen={onOpen}
         onOpenChange={onOpenChange}
+      />
+      <NewTripModal
+        isOpen={isTripOpen}
+        onOpen={onTripOpen}
+        onOpenChange={onTripOpenChange}
       />
     </>
   );

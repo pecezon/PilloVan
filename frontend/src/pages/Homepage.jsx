@@ -22,9 +22,6 @@ export default function Homepage() {
         .eq("auth_id", user.id)
         .single();
 
-      console.log("Onboarding status:", data);
-      console.log("user:", user);
-
       setHasOnboarded(data?.finishedOnboarding);
     };
 

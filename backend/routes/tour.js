@@ -4,11 +4,29 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-
 // Get All Tours
 router.get("/get-all-tours", async (req, res) => {
   try {
     const getTours = await prisma.tour.findMany();
+
+    return res.status(200).json(getTours);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+//Get Tours by Company ID
+router.get("/get-tours-by-company/:companyId", async (req, res) => {
+  const companyId = req.params.companyId;
+
+  try {
+    const getTours = await prisma.tour.findMany({
+      where: {
+        companyId: companyId,
+      },
+    });
 
     return res.status(200).json(getTours);
   } catch (error) {
@@ -48,8 +66,8 @@ router.post("/create-tour", async (req, res) => {
   try {
     // Check for required fields
     if (!name || !place || !occupancy || !companyId) {
-      return res.status(400).json({ 
-        message: "Missing required fields." 
+      return res.status(400).json({
+        message: "Missing required fields.",
       });
     }
 
@@ -57,7 +75,7 @@ router.post("/create-tour", async (req, res) => {
     const existingTour = await prisma.tour.findFirst({
       where: {
         name,
-        companyId
+        companyId,
       },
     });
 
@@ -80,7 +98,6 @@ router.post("/create-tour", async (req, res) => {
     });
 
     return res.status(201).json(newTour);
-
   } catch (error) {
     return res.status(500).json({
       message: "Internal server error",
@@ -89,44 +106,43 @@ router.post("/create-tour", async (req, res) => {
   }
 });
 
-
 // Delete a Tour by ID
 router.delete("/delete-tour/:id", async (req, res) => {
-    const tourId = parseInt(req.params.id, 10);
+  const tourId = parseInt(req.params.id, 10);
 
-    try {
-        const deletedTour = await prisma.tour.delete({
-            where: {
-                id: tourId,
-            },
-        });
+  try {
+    const deletedTour = await prisma.tour.delete({
+      where: {
+        id: tourId,
+      },
+    });
 
-        return res.status(200).json(deletedTour);
-    } catch (error) {
-        return res
-        .status(500)
-        .json({ message: "Internal server error", error: error.message });
-    }
+    return res.status(200).json(deletedTour);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 });
 
 // Update a Tour by ID
 router.put("/update-tour/:id", async (req, res) => {
-    const tourId = parseInt(req.params.id, 10);
+  const tourId = parseInt(req.params.id, 10);
 
-    try {
-        const updatedTour = await prisma.tour.update({
-            where: {
-                id: tourId,
-            },
-            data: req.body,
-        });
+  try {
+    const updatedTour = await prisma.tour.update({
+      where: {
+        id: tourId,
+      },
+      data: req.body,
+    });
 
-        return res.status(200).json(updatedTour);
-    } catch (error) {
-        return res
-        .status(500)
-        .json({ message: "Internal server error", error: error.message });
-    }
+    return res.status(200).json(updatedTour);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 });
 
 // Export the router
