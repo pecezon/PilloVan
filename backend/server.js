@@ -20,6 +20,7 @@ app.use(express.json());
 // Import Routes
 const tourRoutes = require("./routes/tour");
 const userRoutes = require("./routes/user");
+const tripRoutes = require("./routes/trip");
 
 // Test Route
 app.get("/", (req, res) => {
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 // Use Routes
 app.use("/tour", tourRoutes);
 app.use("/user", userRoutes);
+app.use("/trip", tripRoutes);
 
 // Start Server
 app.listen(PORT, () =>
