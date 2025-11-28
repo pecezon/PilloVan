@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 import UserDropdown from "../components/UserDropdown";
 import CreationMenu from "../components/CreationMenu";
 import TripDashboard from "../components/TripDashboard";
+import { Spinner } from "@heroui/react";
 
 export default function Homepage() {
   const { user, loading, logout } = useAuth();
@@ -28,7 +29,7 @@ export default function Homepage() {
     fetchProfile();
   }, [user]);
 
-  if (loading) return null;
+  if (loading) return <Spinner />;
 
   if (!hasOnboarded && hasOnboarded !== null)
     return <Navigate to="/onboarding" />;
