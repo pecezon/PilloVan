@@ -83,7 +83,11 @@ router.get("/get-active-trips-by-user/:userId", async (req, res) => {
         status: { in: ["IN_PROGRESS", "PENDING"] },
       },
       include: {
-        users: true,
+        users: {
+          select: {
+            user: true,
+          },
+        },
         tour: true,
       },
       orderBy: {
