@@ -60,7 +60,13 @@ export default function TripListModal({
                       <TableCell>
                         <Chip
                           color={
-                            trip?.status === "COMPLETED" ? "success" : "primary"
+                            trip.status === "PENDING"
+                              ? "warning"
+                              : trip.status === "IN_PROGRESS"
+                              ? "primary"
+                              : trip.status === "COMPLETED"
+                              ? "success"
+                              : "danger"
                           }
                           size="sm"
                         >

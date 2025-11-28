@@ -12,6 +12,7 @@ export default function Homepage() {
   const { user, loading, logout } = useAuth();
 
   const [hasOnboarded, setHasOnboarded] = useState(null);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -19,17 +20,20 @@ export default function Homepage() {
     const fetchProfile = async () => {
       const { data } = await supabase
         .from("users")
-        .select("finishedOnboarding")
+        .select("finishedOnboarding, role")
         .eq("auth_id", user.id)
         .single();
 
       setHasOnboarded(data?.finishedOnboarding);
+      setRole(data?.role);
     };
 
     fetchProfile();
   }, [user]);
 
   if (loading) return <Spinner />;
+
+  if (role === null || hasOnboarded === null) return <Spinner />;
 
   if (!hasOnboarded && hasOnboarded !== null)
     return <Navigate to="/onboarding" />;
@@ -44,7 +48,7 @@ export default function Homepage() {
         Your Trips
       </p>
       <TripDashboard />
-      <CreationMenu />
+      {role === "ADMIN" || role === "COMPANY" ? <CreationMenu /> : null}
     </div>
   );
 }

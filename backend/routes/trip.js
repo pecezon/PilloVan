@@ -253,6 +253,30 @@ router.put("/update-trip/:id", async (req, res) => {
   }
 });
 
+// update trip status
+router.put("/update-trip-status/:id", async (req, res) => {
+  try {
+    const tripId = parseInt(req.params.id);
+    const { status } = req.body;
+
+    const updatedTrip = await prisma.trip.update({
+      where: {
+        id: tripId,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    return res.status(200).json(updatedTrip);
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal server error updating trip status.",
+      details: error.message,
+    });
+  }
+});
+
 // delete trip by id
 router.delete("/delete-trip/:id", async (req, res) => {
   try {
