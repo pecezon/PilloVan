@@ -2,7 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 async function createTrip(payload) {
-  const res = await fetch("http://localhost:3001/trip/create-trip", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/trip/create-trip`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export function useCreateTrip() {
 // Update trip status
 async function updateTripStatus(tripId, status) {
   const res = await fetch(
-    `http://localhost:3001/trip/update-trip-status/${tripId}`,
+    `${import.meta.env.VITE_API_URL}/trip/update-trip-status/${tripId}`,
     {
       method: "PUT",
       headers: {

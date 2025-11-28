@@ -28,7 +28,8 @@ export default function TripDashboard() {
     queryKey: ["active-trips"],
     queryFn: () =>
       fetch(
-        "http://localhost:3001/trip/get-active-trips-by-user/" + user?.id
+        `${import.meta.env.VITE_API_URL}/trip/get-active-trips-by-user/` +
+          user?.id
       ).then((res) => res.json()),
   });
 
@@ -40,7 +41,8 @@ export default function TripDashboard() {
     queryKey: ["inactive-trips"],
     queryFn: () =>
       fetch(
-        "http://localhost:3001/trip/get-inactive-trips-by-user/" + user?.id
+        `${import.meta.env.VITE_API_URL}/trip/get-inactive-trips-by-user/` +
+          user?.id
       ).then((res) => res.json()),
   });
 

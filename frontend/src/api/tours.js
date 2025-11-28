@@ -2,7 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 async function createTour(payload) {
-  const res = await fetch("http://localhost:3001/tour/create-tour", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/tour/create-tour`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

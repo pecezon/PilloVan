@@ -86,9 +86,9 @@ export default function NewTripModal({ isOpen, onOpen, onOpenChange }) {
   const { isPending, error, data } = useQuery({
     queryKey: ["tours"],
     queryFn: () =>
-      fetch("http://localhost:3001/tour/get-tours-by-company/" + user?.id).then(
-        (res) => res.json()
-      ),
+      fetch(
+        `${import.meta.env.VITE_API_URL}/tour/get-tours-by-company/` + user?.id
+      ).then((res) => res.json()),
   });
 
   if (isPending) return <Spinner />;
