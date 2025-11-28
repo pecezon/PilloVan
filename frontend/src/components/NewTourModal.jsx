@@ -8,6 +8,7 @@ import {
   ModalFooter,
   Input,
   Button,
+  addToast,
 } from "@heroui/react";
 import { useAuth } from "../auth/AuthContext";
 
@@ -24,10 +25,30 @@ export default function NewTourModal({ isOpen, onOpen, onOpenChange }) {
   const handleCreateTour = () => {
     mutate(tourData, {
       onSuccess: () => {
+        setTourData({
+          name: "",
+          place: "",
+          occupancy: 1,
+          description: "",
+          companyId: user?.id || "",
+        });
         onOpenChange(false);
+        addToast({
+          title: "Tour Created",
+          description: "The new tour has been successfully created.",
+          timeout: 3000,
+          shouldShowTimeoutProgress: true,
+          color: "success",
+        });
       },
       onError: (error) => {
-        console.error("Error creating tour:", error);
+        addToast({
+          title: "Error",
+          description: "There was an error creating the tour.",
+          timeout: 3000,
+          shouldShowTimeoutProgress: true,
+          color: "danger",
+        });
       },
     });
   };
