@@ -13,59 +13,6 @@ import { getTimeFromDate } from "../utils/getTimeFromDate";
 import { getDayFromDate } from "../utils/getDayFromDate";
 
 export default function TripModal({ trip, isOpen, onOpenChange }) {
-  // tour body example
-  // "id": 22,
-  // 	"tourId": 3,
-  // 	"pickup_time": "2026-04-16T17:45:02.652Z",
-  // 	"whatsApp_group_link": "https://chat.whatsapp.com/CjOXZTyLkLQLiCSivYoeQF",
-  // 	"party_size": 1,
-  // 	"pickup_location": "sdfasdfas",
-  // 	"dropoff_location": "asdfasdfasf",
-  // 	"status": "PENDING",
-  // 	"users": [
-  // 		{
-  // 			"user": {
-  // 				"auth_id": "8329e6ac-445e-4219-86e9-17d8198d0304",
-  // 				"firstName": "Linette",
-  // 				"lastName": "Acosta",
-  // 				"phone": "+52 668 212 9013",
-  // 				"phoneAlt": null,
-  // 				"email": "linette.acosta@cetys.edu.mx",
-  // 				"age": 20,
-  // 				"whapi_id": "5216682129013",
-  // 				"gender": "FEMALE",
-  // 				"role": "TOURIST",
-  // 				"finishedOnboarding": true,
-  // 				"createdAt": "2025-11-23T20:15:23.609Z"
-  // 			}
-  // 		},
-  // 		{
-  // 			"user": {
-  // 				"auth_id": "99af0a10-80a7-4db3-b126-d9d71c7ef8df",
-  // 				"firstName": "Diego",
-  // 				"lastName": "Lopez",
-  // 				"phone": "+52 646 294 3298",
-  // 				"phoneAlt": null,
-  // 				"email": "diego.lopez171205@gmail.com",
-  // 				"age": 20,
-  // 				"whapi_id": null,
-  // 				"gender": "MALE",
-  // 				"role": "TOURIST",
-  // 				"finishedOnboarding": true,
-  // 				"createdAt": "2025-11-23T06:51:05.584Z"
-  // 			}
-  // 		}
-  // 	],
-  // 	"tour": {
-  // 		"id": 3,
-  // 		"name": "pene",
-  // 		"place": "pene",
-  // 		"occupancy": 1,
-  // 		"description": "",
-  // 		"companyId": "99af0a10-80a7-4db3-b126-d9d71c7ef8df"
-  // 	}
-  // }
-
   return (
     <Modal
       isOpen={isOpen}

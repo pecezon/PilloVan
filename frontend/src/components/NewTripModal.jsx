@@ -14,6 +14,7 @@ import {
   SelectItem,
   DatePicker,
   Spinner,
+  addToast,
 } from "@heroui/react";
 import { useAuth } from "../auth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -59,9 +60,24 @@ export default function NewTripModal({ isOpen, onOpen, onOpenChange }) {
         });
         //close the modal
         onOpenChange(false);
+        //Show success toast
+        addToast({
+          title: "Trip Created",
+          description: "The new trip has been successfully created.",
+          timeout: 3000,
+          shouldShowTimeoutProgress: true,
+          color: "success",
+        });
       },
       onError: (error) => {
         console.error("Error creating trip:", error);
+        addToast({
+          title: "Error",
+          description: "There was an error creating the trip.",
+          timeout: 3000,
+          shouldShowTimeoutProgress: true,
+          color: "danger",
+        });
       },
     });
   };

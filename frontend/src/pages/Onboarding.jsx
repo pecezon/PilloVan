@@ -1,7 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { Form, Input, Button, Select, SelectItem } from "@heroui/react";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  SelectItem,
+  addToast,
+} from "@heroui/react";
 import { useAuth } from "../auth/AuthContext";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -49,15 +56,6 @@ export default function Onboarding() {
         onSubmit={async (e) => {
           e.preventDefault();
 
-          const whapi_id = await createWhapiContact({
-            phone: profile.phone,
-            name: `${profile.firstName} ${profile.lastName}`,
-          });
-
-          if (!whapi_id) {
-            console.error("Error creating WhatsApp contact:", contactError);
-          }
-
           const { error } = await supabase
             .from("users")
             .update({
@@ -67,11 +65,17 @@ export default function Onboarding() {
               gender: profile.gender,
               age: parseInt(profile.age),
               finishedOnboarding: true,
-              whapi_id: whapi_id || null,
             })
             .eq("auth_id", user.id);
           if (error) {
             console.error("Error updating profile:", error);
+            addToast({
+              title: "Error",
+              description: "There was an error updating your profile.",
+              timeout: 3000,
+              shouldShowTimeoutProgress: true,
+              color: "danger",
+            });
           } else {
             window.location.href = "/home";
           }
