@@ -8,11 +8,78 @@ import {
   Divider,
   Chip,
   Button,
+  addToast,
+  Select,
+  Spinner,
+  SelectItem,
 } from "@heroui/react";
+import { supabase } from "../supabaseClient";
 import { getTimeFromDate } from "../utils/getTimeFromDate";
 import { getDayFromDate } from "../utils/getDayFromDate";
+import { useUpdateTripStatus } from "../api/trips";
+import { useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
 
 export default function TripModal({ trip, isOpen, onOpenChange }) {
+  //Status select items
+  const items = [
+    { key: "PENDING", color: "warning" },
+    { key: "IN_PROGRESS", color: "primary" },
+    { key: "COMPLETED", color: "success" },
+    { key: "CANCELLED", color: "danger" },
+  ];
+  const { mutate: updateTripStatus } = useUpdateTripStatus();
+
+  //Local state to hold selected status
+  const [selectedStatus, setSelectedStatus] = useState(trip?.status);
+  useEffect(() => {
+    if (trip?.status) {
+      setSelectedStatus(trip.status);
+    }
+  }, [trip?.status]);
+
+  // Handle status change
+  const handleStatusChange = (newStatus) => {
+    updateTripStatus(
+      { tripId: trip.id, status: newStatus },
+      {
+        onSuccess: () => {
+          addToast({
+            title: "Trip Updated",
+            description: "The trip status has been successfully updated.",
+            timeout: 3000,
+            shouldShowTimeoutProgress: true,
+            color: "success",
+          });
+          setSelectedStatus(newStatus);
+        },
+      }
+    );
+  };
+
+  //User role fetch
+  const { user, loading } = useAuth();
+
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from("users")
+        .select("role")
+        .eq("auth_id", user.id)
+        .single();
+
+      setRole(data?.role);
+    };
+
+    fetchProfile();
+  }, [user]);
+
+  if (loading || role === null) return <Spinner />;
+
   return (
     <Modal
       isOpen={isOpen}
@@ -59,14 +126,44 @@ export default function TripModal({ trip, isOpen, onOpenChange }) {
                   " at " +
                   getTimeFromDate(trip?.pickup_time)}
               </p>
-              <div>
+              <div className="flex items-center gap-2">
                 <span className="font-semibold">Status: </span>
-                <Chip
-                  size="sm"
-                  color={trip?.status === "COMPLETED" ? "success" : "primary"}
-                >
-                  {trip?.status}
-                </Chip>
+                {role === "ADMIN" || role === "COMPANY" ? (
+                  <Select
+                    className="w-40"
+                    items={items}
+                    selectedKeys={[selectedStatus]}
+                    onSelectionChange={(keys) => {
+                      const value = Array.from(keys)[0];
+                      setSelectedStatus(value);
+                      handleStatusChange(value);
+                    }}
+                    renderValue={(items) =>
+                      items.map((item) => (
+                        <Chip key={item.key} color={item.data.color} size="sm">
+                          {item.key}
+                        </Chip>
+                      ))
+                    }
+                  >
+                    {(item) => (
+                      <SelectItem key={item.key}>
+                        <Chip color={item.color} size="sm">
+                          {item.key}
+                        </Chip>
+                      </SelectItem>
+                    )}
+                  </Select>
+                ) : (
+                  <Chip
+                    color={
+                      items.find((item) => item.key === selectedStatus)?.color
+                    }
+                    size="sm"
+                  >
+                    {selectedStatus}
+                  </Chip>
+                )}
               </div>
               <p>
                 <span className="font-semibold">Party Size: </span>
