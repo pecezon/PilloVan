@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
       const { data } = await supabase.auth.getSession();
       setSession(data.session);
       setUser(data.session?.user ?? null);
-      setLoading(false);
     };
 
     init();
@@ -22,6 +21,7 @@ export function AuthProvider({ children }) {
       (_event, newSession) => {
         setSession(newSession);
         setUser(newSession?.user ?? null);
+        setLoading(false);
       }
     );
 
