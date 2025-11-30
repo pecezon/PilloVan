@@ -192,32 +192,6 @@ router.post("/create-trip", async (req, res) => {
       include: { users: { include: { user: true } } },
     });
 
-    // create contacts and get IDs
-    // const createdContacts = await ensureContacts([
-    //   ...participants.map((p) => ({ phone: p.phone, name: p.name })),
-    //   { phone: company.phone, name: company.name },
-    // ]);
-
-    // console.log("Created contacts:", createdContacts);
-
-    // // extract only their WHAPI IDs
-    // const contactIds = createdContacts.map((c) => c.id);
-
-    // // Create group
-    // const group = await createGroup(
-    //   `Trip #${newTrip.id} - ${pickup_location}`,
-    //   contactIds
-    // );
-
-    // // Get invite link
-    // const inviteLink = await getGroupInvite(group.id);
-
-    // //UPDATE TRIP WITH WA LINK
-    // const updatedTrip = await prisma.trip.update({
-    //   where: { id: newTrip.id },
-    //   data: { whatsApp_group_link: inviteLink },
-    // });
-
     return res.status(201).json({
       message: "Trip created successfully",
       trip: newTrip,
