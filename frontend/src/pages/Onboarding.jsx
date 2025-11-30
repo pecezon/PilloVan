@@ -21,7 +21,7 @@ export default function Onboarding() {
   const [hasOnboarded, setHasOnboarded] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
     const fetchProfile = async () => {
       const { data } = await supabase

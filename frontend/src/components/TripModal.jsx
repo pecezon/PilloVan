@@ -63,7 +63,7 @@ export default function TripModal({ trip, isOpen, onOpenChange }) {
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
     const fetchProfile = async () => {
       const { data } = await supabase
