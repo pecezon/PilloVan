@@ -1,5 +1,5 @@
 // Create tour
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 async function createTour(payload) {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/tour/create-tour`, {
@@ -19,7 +19,11 @@ async function createTour(payload) {
 }
 
 export function useCreateTour() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload) => createTour(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tours"]);
+    },
   });
 }
