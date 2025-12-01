@@ -119,8 +119,15 @@ router.get("/get-inactive-trips-by-user/:userId", async (req, res) => {
         status: { in: ["COMPLETED", "CANCELLED"] },
       },
       include: {
-        users: true,
+        users: {
+          select: {
+            user: true,
+          },
+        },
         tour: true,
+      },
+      orderBy: {
+        pickup_time: "asc",
       },
     });
 
