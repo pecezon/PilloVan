@@ -1,5 +1,5 @@
 // Create trip
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 async function createTrip(payload) {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/trip/create-trip`, {
@@ -19,8 +19,13 @@ async function createTrip(payload) {
 }
 
 export function useCreateTrip() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload) => createTrip(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["active-trips"]);
+      queryClient.invalidateQueries(["inactive-trips"]);
+    },
   });
 }
 
@@ -46,7 +51,12 @@ async function updateTripStatus(tripId, status) {
 }
 
 export function useUpdateTripStatus() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ tripId, status }) => updateTripStatus(tripId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["active-trips"]);
+      queryClient.invalidateQueries(["inactive-trips"]);
+    },
   });
 }
