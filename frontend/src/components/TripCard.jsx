@@ -11,7 +11,7 @@ export default function TripCard({ trip, onClick }) {
       <div className="flex flex-col justify-between w-5/8">
         <h2 className="text-lg font-bold text-gray-800">{trip?.tour?.name}</h2>
         <p className="text-gray-600">
-          Turistas:{" "}
+          Tourists:{" "}
           {trip?.users
             ?.filter((u) => u.user?.role === "TOURIST")
             .map((u) => u.user?.firstName)
