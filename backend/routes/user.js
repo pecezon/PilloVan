@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Initialize Prisma Client
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../utils/prismaClient");
 
 // Get All Users
 router.get("/get-all-users", async (req, res) => {

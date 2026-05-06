@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../utils/prismaClient");
+const { verifyCompanyRole } = require("../utils/roleMiddleware");
 
 // Get All Tours
 router.get("/get-all-tours", async (req, res) => {
@@ -60,7 +60,7 @@ router.get("/get-tour/:id", async (req, res) => {
 });
 
 // Create a new Tour
-router.post("/create-tour", async (req, res) => {
+router.post("/create-tour", verifyCompanyRole, async (req, res) => {
   const { name, place, occupancy, description, companyId } = req.body;
 
   try {
@@ -107,7 +107,7 @@ router.post("/create-tour", async (req, res) => {
 });
 
 // Delete a Tour by ID
-router.delete("/delete-tour/:id", async (req, res) => {
+router.delete("/delete-tour/:id", verifyCompanyRole, async (req, res) => {
   const tourId = parseInt(req.params.id, 10);
 
   try {
@@ -126,7 +126,7 @@ router.delete("/delete-tour/:id", async (req, res) => {
 });
 
 // Update a Tour by ID
-router.put("/update-tour/:id", async (req, res) => {
+router.put("/update-tour/:id", verifyCompanyRole, async (req, res) => {
   const tourId = parseInt(req.params.id, 10);
 
   try {
