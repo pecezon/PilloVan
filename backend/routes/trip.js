@@ -5,8 +5,8 @@ const {
   getGroupInvite,
   ensureContacts,
 } = require("../utils/createWhatsAppGroup");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../utils/prismaClient");
+const { verifyCompanyRole } = require("../utils/roleMiddleware");
 
 // get all trips
 router.get("/get-trips", async (req, res) => {
@@ -142,7 +142,7 @@ router.get("/get-inactive-trips-by-user/:userId", async (req, res) => {
 });
 
 // create new trip
-router.post("/create-trip", async (req, res) => {
+router.post("/create-trip", verifyCompanyRole, async (req, res) => {
   try {
     const {
       tour_id,
@@ -214,7 +214,7 @@ router.post("/create-trip", async (req, res) => {
 });
 
 // update trip
-router.put("/update-trip/:id", async (req, res) => {
+router.put("/update-trip/:id", verifyCompanyRole, async (req, res) => {
   try {
     const tripId = parseInt(req.params.id);
 
@@ -235,7 +235,7 @@ router.put("/update-trip/:id", async (req, res) => {
 });
 
 // update trip status
-router.put("/update-trip-status/:id", async (req, res) => {
+router.put("/update-trip-status/:id", verifyCompanyRole, async (req, res) => {
   try {
     const tripId = parseInt(req.params.id);
     const { status } = req.body;
@@ -259,7 +259,7 @@ router.put("/update-trip-status/:id", async (req, res) => {
 });
 
 // delete trip by id
-router.delete("/delete-trip/:id", async (req, res) => {
+router.delete("/delete-trip/:id", verifyCompanyRole, async (req, res) => {
   try {
     const tripId = parseInt(req.params.id);
 
