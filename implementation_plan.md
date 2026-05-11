@@ -22,22 +22,28 @@ Por favor revisa el plan a continuación. Si estás de acuerdo con la estrategia
 ## Fases de Implementación
 
 ### Fase 1: Inicialización y Configuración Base
-- [ ] Ejecutar `npx create-expo-app@latest mobile` con la plantilla de Expo Router.
-- [ ] Instalar dependencias core: `nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@tanstack/react-query`, y `axios`.
-- [ ] Configurar `tailwind.config.js`, `babel.config.js` y `metro.config.js` para habilitar NativeWind.
-- [ ] Crear estructura de carpetas: `src/components`, `src/hooks`, `src/lib` y la carpeta de enrutamiento `app/`.
+- [x] Ejecutar `npx create-expo-app@latest mobile` con la plantilla de Expo Router.
+- [x] Instalar dependencias core: `nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@tanstack/react-query`, y `axios`.
+- [x] Configurar `tailwind.config.js`, `babel.config.js` y `metro.config.js` para habilitar NativeWind.
+- [x] Crear estructura de carpetas: `src/components`, `src/hooks`, `src/lib` y la carpeta de enrutamiento `app/`.
 
 ### Fase 2: Configuración de Autenticación (Auth)
-- [ ] Configurar las variables de entorno para Supabase.
-- [ ] Crear el cliente de Supabase adaptado para React Native (usando `AsyncStorage` para persistir la sesión).
-- [ ] Implementar el `AuthContext.tsx` y el hook `useAuth()`.
-- [ ] Configurar el sistema de **Deep Linking** (`scheme` en `app.json`) necesario para que el login de Google redireccione correctamente de vuelta a la app.
-- [ ] Crear la pantalla de Login y el Layout de protección (`_layout.tsx`) para redirigir si no hay sesión activa.
+- [x] Configurar las variables de entorno para Supabase.
+- [x] Crear el cliente de Supabase adaptado para React Native (usando `AsyncStorage` para persistir la sesión).
+- [x] Implementar el `AuthContext.tsx` y el hook `useAuth()`.
+- [x] Configurar el sistema de **Deep Linking** (`scheme` en `app.json`) necesario para que el login de Google redireccione correctamente de vuelta a la app.
+- [x] Crear la pantalla de Login y el Layout de protección (`_layout.tsx`) para redirigir si no hay sesión activa.
 
-### Fase 3: Traducción de Interfaz y Consumo de Datos (API)
-- [ ] Configurar un archivo central para las peticiones API (usando `axios` apuntando a tu API de Express).
-- [ ] Configurar `QueryClientProvider` para habilitar TanStack Query.
-- [ ] Traducir las pantallas de Dashboard / Vistas principales (Tours, Trips, Conductores) replicando el diseño de la web usando clases de Tailwind vía NativeWind.
+### Fase 3: Traducción de Interfaz y Consumo de Datos (API) (En Progreso)
+- [x] Configurar un archivo central para las peticiones API (usando `axios` apuntando a tu API de Express).
+- [x] Configurar `QueryClientProvider` para habilitar TanStack Query.
+- [x] Traducir `TripDashboard`, `TripCard`, y `TripModal`.
+- [ ] Implementar el Flujo de **Onboarding** (`app/(app)/onboarding.tsx`): Formulario obligatorio para usuarios nuevos y redirección inteligente desde el `index.tsx`.
+- [ ] Traducir Modales y Menús de Creación para roles ADMIN/COMPANY:
+  - `CreationMenu.tsx` (Botón flotante de acciones)
+  - `NewTourModal.tsx` (Formulario para crear Tours)
+  - `NewTripModal.tsx` (Formulario para crear Viajes)
+- [ ] Traducir `TripListModal.tsx` para listar viajes asociados a un tour específico.
 
 ## Verification Plan
 
