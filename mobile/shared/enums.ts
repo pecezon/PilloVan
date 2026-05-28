@@ -28,3 +28,9 @@ export const tripStatusValidator = v.union(
   v.literal("CANCELLED"),
 )
 export type TripStatus = Infer<typeof tripStatusValidator>
+
+export const chatKindValidator = v.union(
+  v.literal("GENERAL"),
+  v.literal("WORKERS"),
+)
+export type ChatKind = Infer<typeof chatKindValidator>

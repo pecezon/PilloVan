@@ -1,6 +1,6 @@
 import { defineSchema, defineTable } from "convex/server"
 import { v } from "convex/values"
-import { userStatus, genderValidator, userRolesValidator, tripStatusValidator } from "../shared/enums"
+import { userStatus, genderValidator, userRolesValidator, tripStatusValidator, chatKindValidator } from "../shared/enums"
 
 export default defineSchema({
   users: defineTable({
@@ -44,4 +44,16 @@ export default defineSchema({
     .index("by_userId", ["userId"])
     .index("by_tripId", ["tripId"])
     .index("by_tripId_and_userId", ["tripId", "userId"]),
+  chats: defineTable({
+    tripId: v.id("trips"),
+    kind: chatKindValidator,
+    updatedAt: v.number(),
+  })
+    .index("by_tripId", ["tripId"])
+    .index("by_tripId_and_kind", ["tripId", "kind"]),
+  messages: defineTable({
+    chatId: v.id("chats"),
+    senderId: v.id("users"),
+    body: v.string(),
+  }).index("by_chatId", ["chatId"]),
 })
