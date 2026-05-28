@@ -35,3 +35,12 @@ Convex agent skills for common tasks can be installed by running
 - Preserve light/dark theme support.
 - Prefer existing Gluestack UI components before adding custom primitives.
 - Use lucide icons directly when Gluestack icon wrappers render incorrectly on web.
+
+## Building A New Feature
+
+When requirements are clear, build a feature back-to-front in this order, reusing the existing patterns at each layer:
+
+1. **Schema** — add tables/indexes in `convex/schema.ts`; put validators shared by Convex and the app in `shared/enums.ts`. Add an index for every lookup (never `.filter()`).
+2. **Convex functions** — derive auth with `getCurrentUserOrThrow` and role gates from `convex/lib/`; validate all args; throw `ConvexError` for client-facing errors; return bounded results (`.take()` / `.paginate()`).
+3. **Convex tests** — colocate `*.test.ts` in `convex/`; use `convex-test` + `vitest`; seed data through existing mutations and promote roles via `t.run(ctx => ctx.db.patch(...))`. Run `npm run test:backend`.
+4. **UI/UX** — Gluestack components first, light/dark via `bg-background-*`/`text-typography-*`; model forms on `app/(onboarding)/welcome.tsx`; reach Convex with `useQuery`/`useMutation`/`usePaginatedQuery`; surface errors from `ConvexError.data` in a toast.
