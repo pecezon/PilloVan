@@ -86,7 +86,7 @@ export default function OnboardingWelcome() {
       // The route gate redirects on the ONBOARDED status flip; the toast
       // is reassurance that survives the transition.
       toast.show({
-        placement: 'top',
+        placement: 'bottom',
         render: ({ id }) => (
           <Toast nativeID={`toast-${id}`} action="success">
             <ToastTitle>Profile saved</ToastTitle>
