@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery } from 'convex/react'
 import { ConvexError } from 'convex/values'
 import { useRouter } from 'expo-router'
-import { Bus, CalendarDays, MapPin, Plus } from 'lucide-react-native'
+import { Bus, CalendarDays, MapPin, MessageCircle, Plus } from 'lucide-react-native'
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/actionsheet'
 import { Badge, BadgeText } from '@/components/ui/badge'
 import { Box } from '@/components/ui/box'
+import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
 import { Fab, FabIcon } from '@/components/ui/fab'
 import { HStack } from '@/components/ui/hstack'
 import { Heading } from '@/components/ui/heading'
@@ -323,6 +324,18 @@ export default function TripsPage() {
                     <TripStatusBadge status={selectedTrip.status} />
                   </HStack>
                 )}
+
+                <Button
+                  size="lg"
+                  onPress={() => {
+                    const tripId = selectedTrip._id
+                    setSelectedTrip(null)
+                    router.push(`/trip/${tripId}`)
+                  }}
+                >
+                  <ButtonIcon as={MessageCircle} />
+                  <ButtonText>Open chat</ButtonText>
+                </Button>
               </VStack>
             </Box>
           )}

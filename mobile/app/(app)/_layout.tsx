@@ -49,6 +49,7 @@ export default function AppTabsLayout() {
       />
       <Tabs.Screen name="create-trip" options={{ href: null }} />
       <Tabs.Screen name="create-tour" options={{ href: null }} />
+      <Tabs.Screen name="trip/[tripId]" options={{ href: null }} />
     </Tabs>
   )
 }
