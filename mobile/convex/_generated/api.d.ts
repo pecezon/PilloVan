@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as chats from "../chats.js";
+import type * as lib_chats from "../lib/chats.js";
 import type * as lib_users from "../lib/users.js";
 import type * as tours from "../tours.js";
 import type * as trips from "../trips.js";
@@ -20,6 +22,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  chats: typeof chats;
+  "lib/chats": typeof lib_chats;
   "lib/users": typeof lib_users;
   tours: typeof tours;
   trips: typeof trips;
