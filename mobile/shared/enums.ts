@@ -19,4 +19,4 @@ export const genderValidator = v.union(
   v.literal("FEMALE"),
   v.literal("OTHER"),
 )
-export type Gender = Infer<typeof genderValidator>
+export type GenderType = Infer<typeof genderValidator>
