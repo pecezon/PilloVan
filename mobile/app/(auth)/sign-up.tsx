@@ -1,5 +1,5 @@
-import { Box } from '@/components/ui/box'
-import { Button, ButtonText } from '@/components/ui/button'
+import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import {
   FormControl,
   FormControlError,
@@ -8,29 +8,29 @@ import {
   FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
-} from '@/components/ui/form-control'
-import { Heading } from '@/components/ui/heading'
-import { HStack } from '@/components/ui/hstack'
-import { Input, InputField } from '@/components/ui/input'
-import { Text } from '@/components/ui/text'
-import { VStack } from '@/components/ui/vstack'
-import { useSignUp } from '@clerk/expo'
-import { type Href, useRouter } from 'expo-router'
-import React from 'react'
+} from "@/components/ui/form-control";
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
+import { Input, InputField } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { useSignUp } from "@clerk/expo";
+import { type Href, useRouter } from "expo-router";
+import React from "react";
 
-const AUTH_REDIRECT_PATH = '/'
-const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href
+const AUTH_REDIRECT_PATH = "/";
+const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href;
 
 export default function Page() {
-  const { signUp, errors, fetchStatus } = useSignUp()
-  const router = useRouter()
+  const { signUp, errors, fetchStatus } = useSignUp();
+  const router = useRouter();
 
   // For email OTP: collect the email address instead of the phone number
-  const [emailAddress, setEmailAddress] = React.useState('')
-  const [code, setCode] = React.useState('')
+  const [emailAddress, setEmailAddress] = React.useState("");
+  const [code, setCode] = React.useState("");
 
-  const emailAddressError = errors?.fields?.emailAddress?.message
-  const codeError = errors?.fields?.code?.message
+  const emailAddressError = errors?.fields?.emailAddress?.message;
+  const codeError = errors?.fields?.code?.message;
 
   const finalizeSignUp = async () => {
     await signUp.finalize({
@@ -38,53 +38,53 @@ export default function Page() {
         // Handle session tasks
         // See https://clerk.com/docs/guides/development/custom-flows/authentication/session-tasks
         if (session?.currentTask) {
-          console.log(session?.currentTask)
-          return
+          console.log(session?.currentTask);
+          return;
         }
 
         // If no session tasks, navigate the signed-in user to the home page
-        const url = decorateUrl(AUTH_REDIRECT_PATH)
-        if (typeof url === 'string' && url.startsWith('http')) {
-          router.replace(AUTH_REDIRECT_HREF)
+        const url = decorateUrl(AUTH_REDIRECT_PATH);
+        if (typeof url === "string" && url.startsWith("http")) {
+          router.replace(AUTH_REDIRECT_HREF);
         } else {
-          router.replace(url as Href)
+          router.replace(url as Href);
         }
       },
-    })
-  }
+    });
+  };
 
   const handleSubmit = async () => {
     // For email OTP: change create({ phoneNumber }) to create({ emailAddress })
-    const { error } = await signUp.create({ emailAddress })
+    const { error } = await signUp.create({ emailAddress });
     if (error) {
-      console.error(JSON.stringify(error, null, 2))
-      return
+      console.error(JSON.stringify(error, null, 2));
+      return;
     }
 
     // For email OTP: change sendPhoneCode() to sendEmailCode()
-    if (!error) await signUp.verifications.sendEmailCode()
-  }
+    if (!error) await signUp.verifications.sendEmailCode();
+  };
 
   const handleVerify = async () => {
     // For email OTP: change verifyPhoneCode() to verifyEmailCode()
-    await signUp.verifications.verifyEmailCode({ code })
+    await signUp.verifications.verifyEmailCode({ code });
 
-    if (signUp.status === 'complete') {
-      await finalizeSignUp()
+    if (signUp.status === "complete") {
+      await finalizeSignUp();
     } else {
       // Check why the sign-up is not complete
-      console.error('Sign-up attempt not complete:', signUp)
+      console.error("Sign-up attempt not complete:", signUp);
     }
-  }
+  };
 
-  if (signUp.status === 'complete') {
-    return null
+  if (signUp.status === "complete") {
+    return null;
   }
 
   if (
-    signUp.status === 'missing_requirements' &&
+    signUp.status === "missing_requirements" &&
     // For email OTP: check for email_address instead of phone_number
-    signUp.unverifiedFields.includes('email_address') &&
+    signUp.unverifiedFields.includes("email_address") &&
     signUp.missingFields.length === 0
   ) {
     return (
@@ -96,7 +96,7 @@ export default function Page() {
                 Verify your account
               </Heading>
               <Text className="text-center text-sm text-typography-500">
-                Enter the one-time code sent to {emailAddress || 'your inbox'}
+                Enter the one-time code sent to {emailAddress || "your inbox"}
               </Text>
             </VStack>
 
@@ -126,7 +126,7 @@ export default function Page() {
                 <Button
                   size="lg"
                   onPress={handleVerify}
-                  isDisabled={fetchStatus === 'fetching' || !code}
+                  isDisabled={fetchStatus === "fetching" || !code}
                 >
                   <ButtonText>Verify</ButtonText>
                 </Button>
@@ -144,7 +144,7 @@ export default function Page() {
           </VStack>
         </Box>
       </Box>
-    )
+    );
   }
 
   return (
@@ -194,7 +194,7 @@ export default function Page() {
             <Button
               size="lg"
               onPress={handleSubmit}
-              isDisabled={!emailAddress || fetchStatus === 'fetching'}
+              isDisabled={!emailAddress || fetchStatus === "fetching"}
             >
               <ButtonText>Continue</ButtonText>
             </Button>
@@ -210,14 +210,12 @@ export default function Page() {
           ) : null}*/}
 
           <HStack className="items-center justify-center">
-            <Text className="text-sm text-typography-600">
-              Already have an account?
-            </Text>
+            <Text className="text-sm text-typography-600">Already have an account?</Text>
             <Button
               variant="link"
               action="primary"
               className="h-auto px-2"
-              onPress={() => router.replace('/(auth)/sign-in')}
+              onPress={() => router.replace("/(auth)/sign-in")}
             >
               <ButtonText>Sign in</ButtonText>
             </Button>
@@ -225,5 +223,5 @@ export default function Page() {
         </VStack>
       </Box>
     </Box>
-  )
+  );
 }

@@ -1,6 +1,12 @@
-import { defineSchema, defineTable } from "convex/server"
-import { v } from "convex/values"
-import { userStatus, genderValidator, userRolesValidator, tripStatusValidator, chatKindValidator } from "../shared/enums"
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+import {
+  userStatus,
+  genderValidator,
+  userRolesValidator,
+  tripStatusValidator,
+  chatKindValidator,
+} from "../shared/enums";
 
 export default defineSchema({
   users: defineTable({
@@ -20,13 +26,13 @@ export default defineSchema({
     .index("by_tokenIdentifier", ["tokenIdentifier"])
     .index("by_email", ["email"]),
   tours: defineTable({
-      name: v.string(),
-      place: v.string(),
-      occupancy: v.number(),
-      description: v.optional(v.string()),
-      companyId: v.id("users"),
-      updatedAt: v.number(),
-    }).index("by_companyId", ["companyId"]),
+    name: v.string(),
+    place: v.string(),
+    occupancy: v.number(),
+    description: v.optional(v.string()),
+    companyId: v.id("users"),
+    updatedAt: v.number(),
+  }).index("by_companyId", ["companyId"]),
   trips: defineTable({
     tourId: v.id("tours"),
     pickupTime: v.number(),
@@ -56,4 +62,4 @@ export default defineSchema({
     senderId: v.id("users"),
     body: v.string(),
   }).index("by_chatId", ["chatId"]),
-})
+});

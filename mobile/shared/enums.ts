@@ -1,36 +1,26 @@
-import { v, type Infer } from "convex/values"
+import { v, type Infer } from "convex/values";
 
-export const userStatus = v.union(
-  v.literal("NEEDS_ONBOARDING"),
-  v.literal("ONBOARDED"),
-)
-export type UserStatus = Infer<typeof userStatus>
+export const userStatus = v.union(v.literal("NEEDS_ONBOARDING"), v.literal("ONBOARDED"));
+export type UserStatus = Infer<typeof userStatus>;
 
 export const userRolesValidator = v.union(
   v.literal("TOURIST"),
   v.literal("WORKER"),
   v.literal("COMPANY"),
   v.literal("ADMIN"),
-)
-export type UserRoles = Infer<typeof userRolesValidator>
+);
+export type UserRoles = Infer<typeof userRolesValidator>;
 
-export const genderValidator = v.union(
-  v.literal("MALE"),
-  v.literal("FEMALE"),
-  v.literal("OTHER"),
-)
-export type GenderType = Infer<typeof genderValidator>
+export const genderValidator = v.union(v.literal("MALE"), v.literal("FEMALE"), v.literal("OTHER"));
+export type GenderType = Infer<typeof genderValidator>;
 
 export const tripStatusValidator = v.union(
   v.literal("PENDING"),
   v.literal("IN_PROGRESS"),
   v.literal("COMPLETED"),
   v.literal("CANCELLED"),
-)
-export type TripStatus = Infer<typeof tripStatusValidator>
+);
+export type TripStatus = Infer<typeof tripStatusValidator>;
 
-export const chatKindValidator = v.union(
-  v.literal("GENERAL"),
-  v.literal("WORKERS"),
-)
-export type ChatKind = Infer<typeof chatKindValidator>
+export const chatKindValidator = v.union(v.literal("GENERAL"), v.literal("WORKERS"));
+export type ChatKind = Infer<typeof chatKindValidator>;

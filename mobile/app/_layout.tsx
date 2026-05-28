@@ -1,29 +1,25 @@
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
-import '@/global.css';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import * as SystemUI from 'expo-system-ui';
-import { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
-import { useColorScheme } from '@/components/useColorScheme';
-import { Stack, usePathname, useRouter, useSegments } from 'expo-router';
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import "@/global.css";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
+import { useEffect, useRef, useState } from "react";
+import { View } from "react-native";
+import { useColorScheme } from "@/components/useColorScheme";
+import { Stack, usePathname, useRouter, useSegments } from "expo-router";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, useAuth } from '@clerk/expo'
-import { tokenCache } from '@clerk/expo/token-cache'
-import { useCurrentUser, type CurrentUserState } from '@/components/lib/useCurrentUser';
-import { ThemeModeFab, ThemeModeProvider } from '@/components/ThemeModeFab';
+import { ClerkProvider, useAuth } from "@clerk/expo";
+import { tokenCache } from "@clerk/expo/token-cache";
+import { useCurrentUser, type CurrentUserState } from "@/components/lib/useCurrentUser";
+import { ThemeModeFab, ThemeModeProvider } from "@/components/ThemeModeFab";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,7 +27,7 @@ const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
 });
 
-type AppRouteState = Exclude<CurrentUserState["state"], "loading">
+type AppRouteState = Exclude<CurrentUserState["state"], "loading">;
 
 const AUTH_ROUTES = {
   signedOut: {
@@ -46,20 +42,23 @@ const AUTH_ROUTES = {
     allowedGroups: ["(app)"],
     defaultRoute: "/home",
   },
-} as const satisfies Record<AppRouteState, {
-  allowedGroups: readonly (string | undefined)[]
-  defaultRoute: string
-}>
+} as const satisfies Record<
+  AppRouteState,
+  {
+    allowedGroups: readonly (string | undefined)[];
+    defaultRoute: string;
+  }
+>;
 
 export default function RootLayout() {
-  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
   if (!publishableKey) {
-    throw new Error('Add your Clerk Publishable Key to the .env file')
+    throw new Error("Add your Clerk Publishable Key to the .env file");
   }
 
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -84,15 +83,11 @@ function RootLayoutNav({ fontsLoaded }: { fontsLoaded: boolean }) {
   const systemColorScheme = useColorScheme();
   const currentUser = useCurrentUser();
   const hasHiddenSplashRef = useRef(false);
-  const [mode, setMode] = useState<'system' | 'light' | 'dark'>('system');
+  const [mode, setMode] = useState<"system" | "light" | "dark">("system");
 
-  const effectiveColorScheme = mode === 'system'
-    ? (systemColorScheme ?? 'light')
-    : mode;
-  const navigationBackground = effectiveColorScheme === 'dark'
-    ? '#171717'
-    : '#ffffff';
-  const navigationThemeBase = effectiveColorScheme === 'dark' ? DarkTheme : DefaultTheme;
+  const effectiveColorScheme = mode === "system" ? (systemColorScheme ?? "light") : mode;
+  const navigationBackground = effectiveColorScheme === "dark" ? "#171717" : "#ffffff";
+  const navigationThemeBase = effectiveColorScheme === "dark" ? DarkTheme : DefaultTheme;
   const navigationTheme = {
     ...navigationThemeBase,
     colors: {
@@ -102,12 +97,12 @@ function RootLayoutNav({ fontsLoaded }: { fontsLoaded: boolean }) {
     },
   };
   const themeColors = {
-    fabIcon: effectiveColorScheme === 'dark' ? '#171717' : '#ffffff',
-    mutedIcon: effectiveColorScheme === 'dark' ? '#a3a3a3' : '#737373',
+    fabIcon: effectiveColorScheme === "dark" ? "#171717" : "#ffffff",
+    mutedIcon: effectiveColorScheme === "dark" ? "#a3a3a3" : "#737373",
   };
 
   useEffect(() => {
-    if (typeof document === 'undefined') return;
+    if (typeof document === "undefined") return;
 
     document.documentElement.style.backgroundColor = navigationBackground;
     document.body.style.backgroundColor = navigationBackground;
@@ -136,12 +131,12 @@ function RootLayoutNav({ fontsLoaded }: { fontsLoaded: boolean }) {
   }, [currentUser.isLoading, currentUser.state, fontsLoaded, router, segments]);
 
   const handleToggleTheme = () => {
-    if (mode === 'system') {
-      setMode('light');
-    } else if (mode === 'light') {
-      setMode('dark');
+    if (mode === "system") {
+      setMode("light");
+    } else if (mode === "light") {
+      setMode("dark");
     } else {
-      setMode('system');
+      setMode("system");
     }
   };
 
@@ -167,7 +162,7 @@ function RootLayoutNav({ fontsLoaded }: { fontsLoaded: boolean }) {
           <Stack
             screenOptions={{
               headerShown: false,
-              animation: 'fade',
+              animation: "fade",
               contentStyle: { backgroundColor: navigationBackground },
               navigationBarColor: navigationBackground,
             }}
@@ -185,7 +180,7 @@ function RootLayoutNav({ fontsLoaded }: { fontsLoaded: boolean }) {
               <Stack.Screen name="(app)" />
             </Stack.Protected>
           </Stack>
-          {pathname === '/' && (
+          {pathname === "/" && (
             <ThemeModeFab
               mode={mode}
               effectiveColorScheme={effectiveColorScheme}

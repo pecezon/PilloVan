@@ -1,5 +1,5 @@
-import { Box } from '@/components/ui/box'
-import { Button, ButtonText } from '@/components/ui/button'
+import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import {
   FormControl,
   FormControlError,
@@ -8,29 +8,29 @@ import {
   FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
-} from '@/components/ui/form-control'
-import { Heading } from '@/components/ui/heading'
-import { HStack } from '@/components/ui/hstack'
-import { Input, InputField } from '@/components/ui/input'
-import { Text } from '@/components/ui/text'
-import { VStack } from '@/components/ui/vstack'
-import { useSignIn } from '@clerk/expo'
-import { type Href, useRouter } from 'expo-router'
-import React from 'react'
+} from "@/components/ui/form-control";
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
+import { Input, InputField } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { useSignIn } from "@clerk/expo";
+import { type Href, useRouter } from "expo-router";
+import React from "react";
 
-const AUTH_REDIRECT_PATH = '/'
-const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href
+const AUTH_REDIRECT_PATH = "/";
+const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href;
 
 export default function Page() {
-  const { signIn, errors, fetchStatus } = useSignIn()
-  const router = useRouter()
+  const { signIn, errors, fetchStatus } = useSignIn();
+  const router = useRouter();
 
   // For email OTP: collect the email address instead of the phone number
-  const [emailAddress, setEmailAddress] = React.useState('')
-  const [code, setCode] = React.useState('')
+  const [emailAddress, setEmailAddress] = React.useState("");
+  const [code, setCode] = React.useState("");
 
-  const identifierError = errors?.fields?.identifier?.message
-  const codeError = errors?.fields?.code?.message
+  const identifierError = errors?.fields?.identifier?.message;
+  const codeError = errors?.fields?.code?.message;
 
   const finalizeSignIn = async () => {
     await signIn.finalize({
@@ -38,58 +38,58 @@ export default function Page() {
         // Handle session tasks
         // See https://clerk.com/docs/guides/development/custom-flows/authentication/session-tasks
         if (session?.currentTask) {
-          console.log(session?.currentTask)
-          return
+          console.log(session?.currentTask);
+          return;
         }
 
         // If no session tasks, navigate the signed-in user to the home page
-        const url = decorateUrl(AUTH_REDIRECT_PATH)
-        if (typeof url === 'string' && url.startsWith('http')) {
-          router.replace(AUTH_REDIRECT_HREF)
+        const url = decorateUrl(AUTH_REDIRECT_PATH);
+        if (typeof url === "string" && url.startsWith("http")) {
+          router.replace(AUTH_REDIRECT_HREF);
         } else {
-          router.replace(url as Href)
+          router.replace(url as Href);
         }
       },
-    })
-  }
+    });
+  };
 
   const handleSubmit = async () => {
     // For email OTP: change phoneNumber to emailAddress
-    const { error } = await signIn.create({ identifier: emailAddress })
+    const { error } = await signIn.create({ identifier: emailAddress });
     if (error) {
       // See https://clerk.com/docs/guides/development/custom-flows/error-handling
-      console.error(JSON.stringify(error, null, 2))
-      return
+      console.error(JSON.stringify(error, null, 2));
+      return;
     }
 
     // For email OTP: change phoneCode.sendCode() to emailCode.sendCode()
-    if (!error) await signIn.emailCode.sendCode({ emailAddress })
+    if (!error) await signIn.emailCode.sendCode({ emailAddress });
 
-    if (signIn.status === 'complete') {
-      await finalizeSignIn()
-    } else if (signIn.status === 'needs_second_factor') {
+    if (signIn.status === "complete") {
+      await finalizeSignIn();
+    } else if (signIn.status === "needs_second_factor") {
       // See https://clerk.com/docs/guides/development/custom-flows/authentication/multi-factor-authentication
-    } else if (signIn.status === 'needs_client_trust') {
+    } else if (signIn.status === "needs_client_trust") {
       // See https://clerk.com/docs/guides/development/custom-flows/authentication/client-trust
     } else {
       // Check why the sign-in is not complete
-      console.error('Sign-in attempt not complete:', signIn)
+      console.error("Sign-in attempt not complete:", signIn);
     }
-  }
+  };
 
   const handleVerification = async () => {
     // For email OTP: change phoneCode.verifyCode() to emailCode.verifyCode()
-    await signIn.emailCode.verifyCode({ code })
+    await signIn.emailCode.verifyCode({ code });
 
-    if (signIn.status === 'complete') {
-      await finalizeSignIn()
+    if (signIn.status === "complete") {
+      await finalizeSignIn();
     } else {
       // Check why the sign-in is not complete
-      console.error('Sign-in attempt not complete:', signIn)
+      console.error("Sign-in attempt not complete:", signIn);
     }
-  }
+  };
 
-  if (signIn.status === 'needs_first_factor') {
+  if (signIn.status === "needs_first_factor") {
     return (
       <Box className="flex-1 items-center justify-center bg-background-0 px-6">
         <Box className="w-full max-w-[420px]">
@@ -99,7 +99,7 @@ export default function Page() {
                 Verify your email address
               </Heading>
               <Text className="text-center text-sm text-typography-500">
-                Enter the one-time code sent to {emailAddress || 'your inbox'}
+                Enter the one-time code sent to {emailAddress || "your inbox"}
               </Text>
             </VStack>
 
@@ -129,7 +129,7 @@ export default function Page() {
                 <Button
                   size="lg"
                   onPress={handleVerification}
-                  isDisabled={fetchStatus === 'fetching' || !code}
+                  isDisabled={fetchStatus === "fetching" || !code}
                 >
                   <ButtonText>Verify</ButtonText>
                 </Button>
@@ -147,8 +147,8 @@ export default function Page() {
                   action="primary"
                   className="h-auto self-center px-0"
                   onPress={() => {
-                    setCode('')
-                    signIn.reset()
+                    setCode("");
+                    signIn.reset();
                   }}
                 >
                   <ButtonText>Start over</ButtonText>
@@ -158,7 +158,7 @@ export default function Page() {
           </VStack>
         </Box>
       </Box>
-    )
+    );
   }
 
   return (
@@ -208,7 +208,7 @@ export default function Page() {
             <Button
               size="lg"
               onPress={handleSubmit}
-              isDisabled={!emailAddress || fetchStatus === 'fetching'}
+              isDisabled={!emailAddress || fetchStatus === "fetching"}
             >
               <ButtonText>Continue</ButtonText>
             </Button>
@@ -224,14 +224,12 @@ export default function Page() {
           ) : null}*/}
 
           <HStack className="items-center justify-center">
-            <Text className="text-sm text-typography-600">
-              Don&apos;t have an account?
-            </Text>
+            <Text className="text-sm text-typography-600">Don&apos;t have an account?</Text>
             <Button
               variant="link"
               action="primary"
               className="h-auto px-2"
-              onPress={() => router.replace('/(auth)/sign-up')}
+              onPress={() => router.replace("/(auth)/sign-up")}
             >
               <ButtonText>Sign up</ButtonText>
             </Button>
@@ -239,5 +237,5 @@ export default function Page() {
         </VStack>
       </Box>
     </Box>
-  )
+  );
 }

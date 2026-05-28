@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { useMutation, useQuery } from 'convex/react'
-import { ConvexError } from 'convex/values'
-import { useRouter } from 'expo-router'
-import { Bus, CalendarDays, MapPin, MessageCircle, Plus } from 'lucide-react-native'
+import { useState } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { ConvexError } from "convex/values";
+import { useRouter } from "expo-router";
+import { Bus, CalendarDays, MapPin, MessageCircle, Plus } from "lucide-react-native";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -11,16 +11,16 @@ import {
   ActionsheetDragIndicatorWrapper,
   ActionsheetItem,
   ActionsheetItemText,
-} from '@/components/ui/actionsheet'
-import { Badge, BadgeText } from '@/components/ui/badge'
-import { Box } from '@/components/ui/box'
-import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
-import { Fab, FabIcon } from '@/components/ui/fab'
-import { HStack } from '@/components/ui/hstack'
-import { Heading } from '@/components/ui/heading'
-import { Icon, ChevronDownIcon } from '@/components/ui/icon'
-import { Pressable } from '@/components/ui/pressable'
-import { ScrollView } from '@/components/ui/scroll-view'
+} from "@/components/ui/actionsheet";
+import { Badge, BadgeText } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { HStack } from "@/components/ui/hstack";
+import { Heading } from "@/components/ui/heading";
+import { Icon, ChevronDownIcon } from "@/components/ui/icon";
+import { Pressable } from "@/components/ui/pressable";
+import { ScrollView } from "@/components/ui/scroll-view";
 import {
   Select,
   SelectBackdrop,
@@ -32,55 +32,52 @@ import {
   SelectItem,
   SelectPortal,
   SelectTrigger,
-} from '@/components/ui/select'
-import { Spinner } from '@/components/ui/spinner'
-import { Text } from '@/components/ui/text'
-import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast'
-import { VStack } from '@/components/ui/vstack'
-import { useCurrentUser } from '@/components/lib/useCurrentUser'
-import { api } from '@/convex/_generated/api'
-import type { FunctionReturnType } from 'convex/server'
-import type { Id } from '@/convex/_generated/dataModel'
-import type { TripStatus, UserRoles } from '@/shared/enums'
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { Text } from "@/components/ui/text";
+import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
+import { VStack } from "@/components/ui/vstack";
+import { useCurrentUser } from "@/components/lib/useCurrentUser";
+import { api } from "@/convex/_generated/api";
+import type { FunctionReturnType } from "convex/server";
+import type { Id } from "@/convex/_generated/dataModel";
+import type { TripStatus, UserRoles } from "@/shared/enums";
 
-type TripItem = FunctionReturnType<typeof api.trips.listMyTrips>[number]
+type TripItem = FunctionReturnType<typeof api.trips.listMyTrips>[number];
 
-const ACTIVE_STATUSES: TripStatus[] = ['PENDING', 'IN_PROGRESS']
+const ACTIVE_STATUSES: TripStatus[] = ["PENDING", "IN_PROGRESS"];
 
 const statusOptions = [
-  { label: 'Pending', value: 'PENDING' },
-  { label: 'In progress', value: 'IN_PROGRESS' },
-  { label: 'Completed', value: 'COMPLETED' },
-  { label: 'Cancelled', value: 'CANCELLED' },
-] as const satisfies readonly { label: string; value: TripStatus }[]
+  { label: "Pending", value: "PENDING" },
+  { label: "In progress", value: "IN_PROGRESS" },
+  { label: "Completed", value: "COMPLETED" },
+  { label: "Cancelled", value: "CANCELLED" },
+] as const satisfies readonly { label: string; value: TripStatus }[];
 
-const statusAction: Record<
-  TripStatus,
-  'success' | 'error' | 'warning' | 'info'
-> = {
-  PENDING: 'warning',
-  IN_PROGRESS: 'info',
-  COMPLETED: 'success',
-  CANCELLED: 'error',
-}
+const statusAction: Record<TripStatus, "success" | "error" | "warning" | "info"> = {
+  PENDING: "warning",
+  IN_PROGRESS: "info",
+  COMPLETED: "success",
+  CANCELLED: "error",
+};
 
 function formatPickupTime(pickupTime: number) {
   return new Date(pickupTime).toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  })
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 function TripStatusBadge({ status }: { status: TripStatus }) {
-  const label = statusOptions.find((option) => option.value === status)?.label ?? status
+  const label = statusOptions.find((option) => option.value === status)?.label ?? status;
   return (
     <Badge action={statusAction[status]} variant="solid">
       <BadgeText>{label}</BadgeText>
     </Badge>
-  )
+  );
 }
 
 function TripCard({ trip, onPress }: { trip: TripItem; onPress: () => void }) {
@@ -89,9 +86,7 @@ function TripCard({ trip, onPress }: { trip: TripItem; onPress: () => void }) {
       <Box className="rounded-2xl border border-outline-100 bg-background-0 px-4 py-4">
         <HStack className="items-start justify-between gap-3">
           <VStack className="flex-1">
-            <Text className="font-medium text-typography-900">
-              {trip.tour?.name ?? 'Trip'}
-            </Text>
+            <Text className="font-medium text-typography-900">{trip.tour?.name ?? "Trip"}</Text>
             <HStack className="mt-2 items-center gap-2">
               <Icon as={MapPin} size="sm" className="text-typography-500" />
               <Text className="text-sm text-typography-500">
@@ -109,52 +104,49 @@ function TripCard({ trip, onPress }: { trip: TripItem; onPress: () => void }) {
         </HStack>
       </Box>
     </Pressable>
-  )
+  );
 }
 
 export default function TripsPage() {
-  const router = useRouter()
-  const currentUser = useCurrentUser()
-  const roles: UserRoles[] = currentUser.roles
-  const canManage = roles.includes('COMPANY') || roles.includes('ADMIN')
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+  const roles: UserRoles[] = currentUser.roles;
+  const canManage = roles.includes("COMPANY") || roles.includes("ADMIN");
 
-  const trips = useQuery(api.trips.listMyTrips, {})
-  const updateTripStatus = useMutation(api.trips.updateTripStatus)
-  const toast = useToast()
+  const trips = useQuery(api.trips.listMyTrips, {});
+  const updateTripStatus = useMutation(api.trips.updateTripStatus);
+  const toast = useToast();
 
-  const [showCreateMenu, setShowCreateMenu] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<TripItem | null>(null)
+  const [showCreateMenu, setShowCreateMenu] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState<TripItem | null>(null);
 
-  const activeTrips = trips?.filter((trip) => ACTIVE_STATUSES.includes(trip.status)) ?? []
-  const pastTrips = trips?.filter((trip) => !ACTIVE_STATUSES.includes(trip.status)) ?? []
+  const activeTrips = trips?.filter((trip) => ACTIVE_STATUSES.includes(trip.status)) ?? [];
+  const pastTrips = trips?.filter((trip) => !ACTIVE_STATUSES.includes(trip.status)) ?? [];
 
-  const handleStatusChange = async (tripId: Id<'trips'>, status: TripStatus) => {
+  const handleStatusChange = async (tripId: Id<"trips">, status: TripStatus) => {
     try {
-      await updateTripStatus({ tripId, status })
+      await updateTripStatus({ tripId, status });
       setSelectedTrip((current) =>
-        current && current._id === tripId ? { ...current, status } : current
-      )
+        current && current._id === tripId ? { ...current, status } : current,
+      );
     } catch (error) {
       const message =
-        error instanceof ConvexError ? String(error.data) : 'Could not update status.'
+        error instanceof ConvexError ? String(error.data) : "Could not update status.";
       toast.show({
-        placement: 'top',
+        placement: "top",
         render: ({ id }) => (
           <Toast nativeID={`toast-${id}`} action="error">
             <ToastTitle>Couldn&apos;t update</ToastTitle>
             <ToastDescription>{message}</ToastDescription>
           </Toast>
         ),
-      })
+      });
     }
-  }
+  };
 
   return (
     <Box className="flex-1 bg-background-0">
-      <ScrollView
-        className="flex-1"
-        contentContainerClassName="items-center px-6 py-safe"
-      >
+      <ScrollView className="flex-1" contentContainerClassName="items-center px-6 py-safe">
         <Box className="w-full max-w-[420px]">
           <VStack space="xl">
             <VStack space="xs" className="items-center">
@@ -175,7 +167,7 @@ export default function TripsPage() {
                 <Icon as={Bus} size="xl" className="text-typography-400" />
                 <Text className="mt-4 text-center text-typography-500">
                   No trips yet.
-                  {canManage ? ' Tap + to create one.' : ' Your trips will appear here.'}
+                  {canManage ? " Tap + to create one." : " Your trips will appear here."}
                 </Text>
               </Box>
             ) : (
@@ -186,11 +178,7 @@ export default function TripsPage() {
                       Active
                     </Text>
                     {activeTrips.map((trip) => (
-                      <TripCard
-                        key={trip._id}
-                        trip={trip}
-                        onPress={() => setSelectedTrip(trip)}
-                      />
+                      <TripCard key={trip._id} trip={trip} onPress={() => setSelectedTrip(trip)} />
                     ))}
                   </VStack>
                 )}
@@ -201,11 +189,7 @@ export default function TripsPage() {
                       Past
                     </Text>
                     {pastTrips.map((trip) => (
-                      <TripCard
-                        key={trip._id}
-                        trip={trip}
-                        onPress={() => setSelectedTrip(trip)}
-                      />
+                      <TripCard key={trip._id} trip={trip} onPress={() => setSelectedTrip(trip)} />
                     ))}
                   </VStack>
                 )}
@@ -229,16 +213,16 @@ export default function TripsPage() {
           </ActionsheetDragIndicatorWrapper>
           <ActionsheetItem
             onPress={() => {
-              setShowCreateMenu(false)
-              router.push('/create-trip')
+              setShowCreateMenu(false);
+              router.push("/create-trip");
             }}
           >
             <ActionsheetItemText>Create trip</ActionsheetItemText>
           </ActionsheetItem>
           <ActionsheetItem
             onPress={() => {
-              setShowCreateMenu(false)
-              router.push('/create-tour')
+              setShowCreateMenu(false);
+              router.push("/create-tour");
             }}
           >
             <ActionsheetItemText>Create tour</ActionsheetItemText>
@@ -257,12 +241,10 @@ export default function TripsPage() {
               <VStack space="md">
                 <VStack space="xs">
                   <Heading size="lg" className="text-typography-900">
-                    {selectedTrip.tour?.name ?? 'Trip'}
+                    {selectedTrip.tour?.name ?? "Trip"}
                   </Heading>
                   {selectedTrip.tour?.place ? (
-                    <Text className="text-sm text-typography-500">
-                      {selectedTrip.tour.place}
-                    </Text>
+                    <Text className="text-sm text-typography-500">{selectedTrip.tour.place}</Text>
                   ) : null}
                 </VStack>
 
@@ -286,9 +268,7 @@ export default function TripsPage() {
 
                 {canManage ? (
                   <VStack space="xs">
-                    <Text className="text-sm font-medium text-typography-700">
-                      Status
-                    </Text>
+                    <Text className="text-sm font-medium text-typography-700">Status</Text>
                     <Select
                       selectedValue={selectedTrip.status}
                       onValueChange={(value) =>
@@ -318,9 +298,7 @@ export default function TripsPage() {
                   </VStack>
                 ) : (
                   <HStack className="items-center gap-2">
-                    <Text className="text-sm font-medium text-typography-700">
-                      Status
-                    </Text>
+                    <Text className="text-sm font-medium text-typography-700">Status</Text>
                     <TripStatusBadge status={selectedTrip.status} />
                   </HStack>
                 )}
@@ -328,9 +306,9 @@ export default function TripsPage() {
                 <Button
                   size="lg"
                   onPress={() => {
-                    const tripId = selectedTrip._id
-                    setSelectedTrip(null)
-                    router.push(`/trip/${tripId}`)
+                    const tripId = selectedTrip._id;
+                    setSelectedTrip(null);
+                    router.push(`/trip/${tripId}`);
                   }}
                 >
                   <ButtonIcon as={MessageCircle} />
@@ -342,5 +320,5 @@ export default function TripsPage() {
         </ActionsheetContent>
       </Actionsheet>
     </Box>
-  )
+  );
 }
