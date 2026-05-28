@@ -47,6 +47,8 @@ export default function AppTabsLayout() {
           tabBarIcon: ({ color }) => <TabIcon as={UserRound} color={color} />,
         }}
       />
+      <Tabs.Screen name="create-trip" options={{ href: null }} />
+      <Tabs.Screen name="create-tour" options={{ href: null }} />
     </Tabs>
   )
 }
