@@ -22,3 +22,23 @@ export async function getCurrentUserOrThrow(ctx: QueryCtx | MutationCtx) {
 
   return user
 }
+
+export async function userByEmail(
+  ctx: QueryCtx | MutationCtx,
+  email: string
+) {
+  return await ctx.db
+    .query("users")
+    .withIndex("by_email", (q) => q.eq("email", email))
+    .unique()
+}
+
+export async function getCurrentCompanyUserOrThrow(
+  ctx: QueryCtx | MutationCtx
+) {
+  const user = await getCurrentUserOrThrow(ctx)
+  const isCompanyOrAdmin =
+    user.roles.includes("COMPANY") || user.roles.includes("ADMIN")
+  if (!isCompanyOrAdmin) throw new ConvexError("Not authorized")
+  return user
+}
