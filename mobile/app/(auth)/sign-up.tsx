@@ -1,7 +1,5 @@
 import { Box } from '@/components/ui/box'
 import { Button, ButtonText } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Center } from '@/components/ui/center'
 import {
   FormControl,
   FormControlError,
@@ -17,10 +15,10 @@ import { Input, InputField } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { VStack } from '@/components/ui/vstack'
 import { useSignUp } from '@clerk/expo'
-import { type Href, Link as RouterLink, useRouter } from 'expo-router'
+import { type Href, useRouter } from 'expo-router'
 import React from 'react'
 
-const AUTH_REDIRECT_PATH = '/app/(tabs)/tab1'
+const AUTH_REDIRECT_PATH = '/'
 const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href
 
 export default function Page() {
@@ -90,113 +88,117 @@ export default function Page() {
     signUp.missingFields.length === 0
   ) {
     return (
-      <Center className="flex-1 bg-background-50 px-4 py-6">
-        <Card className="w-full rounded-3xl border border-outline-100 bg-background-0 px-5 py-6 shadow-sm md:w-2/3 xl:w-1/3">
-          <VStack space="lg">
-            <VStack space="xs">
-              <Heading className="text-2xl font-bold text-typography-900">
+      <Box className="flex-1 items-center justify-center bg-background-0 px-6">
+        <Box className="w-full max-w-[420px]">
+          <VStack space="xl">
+            <VStack space="xs" className="items-center">
+              <Heading className="text-center text-2xl font-semibold text-typography-900">
                 Verify your account
               </Heading>
-              <Text className="text-sm text-typography-500">
-                Enter the one-time code sent to {emailAddress || 'your inbox'}.
+              <Text className="text-center text-sm text-typography-500">
+                Enter the one-time code sent to {emailAddress || 'your inbox'}
               </Text>
             </VStack>
 
-            <FormControl isInvalid={Boolean(codeError)}>
-              <FormControlLabel>
-                <FormControlLabelText>Verification code</FormControlLabelText>
-              </FormControlLabel>
-              <Input size="lg" variant="outline">
-                <InputField
-                  value={code}
-                  placeholder="Enter verification code"
-                  onChangeText={(nextCode) => setCode(nextCode)}
-                  keyboardType="number-pad"
-                  autoComplete="one-time-code"
-                  textContentType="oneTimeCode"
-                />
-              </Input>
-              {codeError ? (
-                <FormControlError>
-                  <FormControlErrorText>{codeError}</FormControlErrorText>
-                </FormControlError>
-              ) : null}
-            </FormControl>
+            <VStack space="lg">
+              <FormControl isInvalid={Boolean(codeError)}>
+                <FormControlLabel>
+                  <FormControlLabelText>Verification code</FormControlLabelText>
+                </FormControlLabel>
+                <Input size="lg" variant="outline">
+                  <InputField
+                    value={code}
+                    placeholder="Enter verification code"
+                    onChangeText={(nextCode) => setCode(nextCode)}
+                    keyboardType="number-pad"
+                    autoComplete="one-time-code"
+                    textContentType="oneTimeCode"
+                  />
+                </Input>
+                {codeError ? (
+                  <FormControlError>
+                    <FormControlErrorText>{codeError}</FormControlErrorText>
+                  </FormControlError>
+                ) : null}
+              </FormControl>
 
-            <VStack space="sm">
-              <Button
-                size="lg"
-                onPress={handleVerify}
-                isDisabled={fetchStatus === 'fetching' || !code}
-              >
-                <ButtonText>Verify</ButtonText>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                action="primary"
-                // For email OTP: change sendPhoneCode() to sendEmailCode()
-                onPress={() => signUp.verifications.sendEmailCode()}
-              >
-                <ButtonText>I need a new code</ButtonText>
-              </Button>
+              <VStack space="sm">
+                <Button
+                  size="lg"
+                  onPress={handleVerify}
+                  isDisabled={fetchStatus === 'fetching' || !code}
+                >
+                  <ButtonText>Verify</ButtonText>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  action="primary"
+                  // For email OTP: change sendPhoneCode() to sendEmailCode()
+                  onPress={() => signUp.verifications.sendEmailCode()}
+                >
+                  <ButtonText>I need a new code</ButtonText>
+                </Button>
+              </VStack>
             </VStack>
           </VStack>
-        </Card>
-      </Center>
+        </Box>
+      </Box>
     )
   }
 
   return (
-    <Center className="flex-1 bg-background-50 px-4 py-6">
-      <Card className="w-full rounded-3xl border border-outline-100 bg-background-0 px-5 py-6 shadow-sm md:w-2/3 xl:w-1/3">
-        <VStack space="lg">
-          <VStack space="xs">
-            <Heading className="text-2xl font-bold text-typography-900">
-              Sign up
+    <Box className="flex-1 items-center justify-center bg-background-0 px-6">
+      <Box className="w-full max-w-[420px]">
+        <VStack space="4xl">
+          <VStack space="xs" className="items-center">
+            <Heading className="text-center text-3xl font-semibold text-typography-900">
+              Sign up to PilloVan
             </Heading>
-            <Text className="text-sm text-typography-500">
+            <Text className="text-center text-sm text-typography-500">
               Create your account with an email-based one-time code.
             </Text>
           </VStack>
 
-          <FormControl isInvalid={Boolean(emailAddressError)}>
-            <FormControlLabel>
-              <FormControlLabelText>Email address</FormControlLabelText>
-            </FormControlLabel>
-            {/* For email OTP: collect the emailAddress instead */}
-            <Input size="lg" variant="outline">
-              <InputField
-                value={emailAddress}
-                placeholder="Enter email address"
-                onChangeText={(nextEmailAddress) => setEmailAddress(nextEmailAddress)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="email"
-                textContentType="emailAddress"
-              />
-            </Input>
-            {emailAddressError ? (
-              <FormControlError>
-                <FormControlErrorText>{emailAddressError}</FormControlErrorText>
-              </FormControlError>
-            ) : (
-              <FormControlHelper>
-                <FormControlHelperText>
-                  We&apos;ll email you a code to finish setup.
-                </FormControlHelperText>
-              </FormControlHelper>
-            )}
-          </FormControl>
+          <VStack space="lg">
+            <FormControl isInvalid={Boolean(emailAddressError)}>
+              <FormControlLabel>
+                <FormControlLabelText>Email address</FormControlLabelText>
+              </FormControlLabel>
+              {/* For email OTP: collect the emailAddress instead */}
+              <Input size="lg" variant="outline">
+                <InputField
+                  value={emailAddress}
+                  placeholder="Enter email address"
+                  onChangeText={(nextEmailAddress) => setEmailAddress(nextEmailAddress)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                />
+              </Input>
+              {emailAddressError ? (
+                <FormControlError>
+                  <FormControlErrorText>{emailAddressError}</FormControlErrorText>
+                </FormControlError>
+              ) : (
+                <FormControlHelper>
+                  <FormControlHelperText>
+                    We&apos;ll email you a code to finish setup.
+                  </FormControlHelperText>
+                </FormControlHelper>
+              )}
+            </FormControl>
 
-          <Button
-            size="lg"
-            onPress={handleSubmit}
-            isDisabled={!emailAddress || fetchStatus === 'fetching'}
-          >
-            <ButtonText>Continue</ButtonText>
-          </Button>
+            <Button
+              size="lg"
+              onPress={handleSubmit}
+              isDisabled={!emailAddress || fetchStatus === 'fetching'}
+            >
+              <ButtonText>Continue</ButtonText>
+            </Button>
+          </VStack>
 
           {/* For your debugging purposes. You can just console.log errors, but we put them in the UI for convenience */}
           {/*{errors ? (
@@ -211,14 +213,17 @@ export default function Page() {
             <Text className="text-sm text-typography-600">
               Already have an account?
             </Text>
-            <RouterLink href="/(auth)/sign-in" asChild>
-              <Button variant="link" action="primary" className="h-auto px-2">
-                <ButtonText>Sign in</ButtonText>
-              </Button>
-            </RouterLink>
+            <Button
+              variant="link"
+              action="primary"
+              className="h-auto px-2"
+              onPress={() => router.replace('/(auth)/sign-in')}
+            >
+              <ButtonText>Sign in</ButtonText>
+            </Button>
           </HStack>
         </VStack>
-      </Card>
-    </Center>
+      </Box>
+    </Box>
   )
 }
