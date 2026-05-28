@@ -1,0 +1,29 @@
+{
+  // Mobile-app editor settings. These cascade over the repo-root .zed/settings.json
+  // and apply only to files under mobile/, so the reference-only web project
+  // (frontend/, backend/) keeps its own behavior.
+  //
+  // On save: Prettier reformats the file (using .prettierrc.json), then ESLint
+  // applies its autofixes (using eslint.config.js).
+  "format_on_save": "on",
+  "formatter": "prettier",
+  "code_actions_on_format": {
+    "source.fixAll.eslint": true
+  },
+  "languages": {
+    "TypeScript": { "formatter": "prettier" },
+    "TSX": { "formatter": "prettier" },
+    "JavaScript": { "formatter": "prettier" },
+    "JSX": { "formatter": "prettier" },
+    "JSON": { "formatter": "prettier" },
+    "JSONC": { "formatter": "prettier" },
+    "Markdown": { "formatter": "prettier" }
+  },
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "useFlatConfig": true
+      }
+    }
+  }
+}

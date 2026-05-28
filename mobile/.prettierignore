@@ -1,0 +1,20 @@
+# Dependencies & build output
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+
+# Generated code
+convex/_generated/
+expo-env.d.ts
+nativewind-env.d.ts
+
+# Vendored Gluestack UI — do not reformat
+components/ui/
+
+# Vendored Convex agent skills
+.agents/
+
+# Lockfiles & data
+package-lock.json

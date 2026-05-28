@@ -1,25 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import { ExternalLink } from './ExternalLink';
-import { Box } from '@/components/ui/box';
-import { Text } from '@/components/ui/text';
+import { ExternalLink } from "./ExternalLink";
+import { Box } from "@/components/ui/box";
+import { Text } from "@/components/ui/text";
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <Box>
       <Box className="items-center mx-4">
-        <Text className="text-center text-typography-950">
-          Open up the code for this screen:
-        </Text>
+        <Text className="text-center text-typography-950">Open up the code for this screen:</Text>
         <Box className="rounded-sm p-2 my-2 bg-secondary-200">
-          <Text className="text-sm leading-5 text-center font-SpaceMono">
-            {path}
-          </Text>
+          <Text className="text-sm leading-5 text-center font-SpaceMono">{path}</Text>
         </Box>
 
         <Text className="text-center text-typography-950">
-          Change any of the text, save the file, and your app will automatically
-          update.
+          Change any of the text, save the file, and your app will automatically update.
         </Text>
       </Box>
 
@@ -29,8 +24,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
           href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet"
         >
           <Text className="text-center">
-            Tap here if your app doesn't automatically update after making
-            changes
+            Tap here if your app doesn&apos;t automatically update after making changes
           </Text>
         </ExternalLink>
       </Box>

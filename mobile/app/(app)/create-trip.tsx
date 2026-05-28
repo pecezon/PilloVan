@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useMutation, useQuery } from 'convex/react'
-import { ConvexError } from 'convex/values'
-import { Redirect, useRouter } from 'expo-router'
-import { Trash2 } from 'lucide-react-native'
-import { Box } from '@/components/ui/box'
-import { Button, ButtonSpinner, ButtonText } from '@/components/ui/button'
+import { useState } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { ConvexError } from "convex/values";
+import { Redirect, useRouter } from "expo-router";
+import { Trash2 } from "lucide-react-native";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import {
   FormControl,
   FormControlError,
@@ -13,14 +13,13 @@ import {
   FormControlLabel,
   FormControlLabelAstrick,
   FormControlLabelText,
-} from '@/components/ui/form-control'
-import { Heading } from '@/components/ui/heading'
-import { AlertCircleIcon, ChevronDownIcon } from '@/components/ui/icon'
-import { HStack } from '@/components/ui/hstack'
-import { Input, InputField } from '@/components/ui/input'
-import { Pressable } from '@/components/ui/pressable'
-import { Icon } from '@/components/ui/icon'
-import { ScrollView } from '@/components/ui/scroll-view'
+} from "@/components/ui/form-control";
+import { Heading } from "@/components/ui/heading";
+import { AlertCircleIcon, ChevronDownIcon, Icon } from "@/components/ui/icon";
+import { HStack } from "@/components/ui/hstack";
+import { Input, InputField } from "@/components/ui/input";
+import { Pressable } from "@/components/ui/pressable";
+import { ScrollView } from "@/components/ui/scroll-view";
 import {
   Select,
   SelectBackdrop,
@@ -32,66 +31,64 @@ import {
   SelectItem,
   SelectPortal,
   SelectTrigger,
-} from '@/components/ui/select'
-import { Text } from '@/components/ui/text'
-import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast'
-import { VStack } from '@/components/ui/vstack'
-import { useCurrentUser } from '@/components/lib/useCurrentUser'
-import { api } from '@/convex/_generated/api'
-import type { Id } from '@/convex/_generated/dataModel'
-import type { UserRoles } from '@/shared/enums'
+} from "@/components/ui/select";
+import { Text } from "@/components/ui/text";
+import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
+import { VStack } from "@/components/ui/vstack";
+import { useCurrentUser } from "@/components/lib/useCurrentUser";
+import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
+import type { UserRoles } from "@/shared/enums";
 
 export default function CreateTripScreen() {
-  const router = useRouter()
-  const currentUser = useCurrentUser()
-  const roles: UserRoles[] = currentUser.roles
-  const canManage = roles.includes('COMPANY') || roles.includes('ADMIN')
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+  const roles: UserRoles[] = currentUser.roles;
+  const canManage = roles.includes("COMPANY") || roles.includes("ADMIN");
 
-  const tours = useQuery(api.tours.listMyCompanyTours, canManage ? {} : 'skip')
-  const createTrip = useMutation(api.trips.createTrip)
-  const toast = useToast()
+  const tours = useQuery(api.tours.listMyCompanyTours, canManage ? {} : "skip");
+  const createTrip = useMutation(api.trips.createTrip);
+  const toast = useToast();
 
-  const [tourId, setTourId] = useState<Id<'tours'> | ''>('')
-  const [pickupLocation, setPickupLocation] = useState('')
-  const [dropoffLocation, setDropoffLocation] = useState('')
-  const [pickupTime, setPickupTime] = useState('')
-  const [partySize, setPartySize] = useState('1')
-  const [whaGroupLink, setWhaGroupLink] = useState('')
-  const [emails, setEmails] = useState<string[]>([''])
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [tourId, setTourId] = useState<Id<"tours"> | "">("");
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [pickupTime, setPickupTime] = useState("");
+  const [partySize, setPartySize] = useState("1");
+  const [whaGroupLink, setWhaGroupLink] = useState("");
+  const [emails, setEmails] = useState<string[]>([""]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!currentUser.isLoading && !canManage) {
-    return <Redirect href="/home" />
+    return <Redirect href="/home" />;
   }
 
-  const parsedPartySize = Number(partySize)
+  const parsedPartySize = Number(partySize);
   const partySizeIsValid =
-    partySize.trim().length > 0 &&
-    Number.isInteger(parsedPartySize) &&
-    parsedPartySize >= 1
+    partySize.trim().length > 0 && Number.isInteger(parsedPartySize) && parsedPartySize >= 1;
 
-  const pickupTimestamp = pickupTime.trim() ? new Date(pickupTime.trim()).getTime() : NaN
-  const pickupTimeIsValid = Number.isFinite(pickupTimestamp)
+  const pickupTimestamp = pickupTime.trim() ? new Date(pickupTime.trim()).getTime() : NaN;
+  const pickupTimeIsValid = Number.isFinite(pickupTimestamp);
 
   const canSubmit =
-    tourId !== '' &&
+    tourId !== "" &&
     pickupLocation.trim().length > 0 &&
     dropoffLocation.trim().length > 0 &&
     pickupTimeIsValid &&
     partySizeIsValid &&
-    !isSubmitting
+    !isSubmitting;
 
   const updateEmail = (index: number, value: string) => {
-    setEmails((current) => current.map((email, i) => (i === index ? value : email)))
-  }
+    setEmails((current) => current.map((email, i) => (i === index ? value : email)));
+  };
 
   const removeEmail = (index: number) => {
-    setEmails((current) => current.filter((_, i) => i !== index))
-  }
+    setEmails((current) => current.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async () => {
-    if (!canSubmit || tourId === '') return
-    setIsSubmitting(true)
+    if (!canSubmit || tourId === "") return;
+    setIsSubmitting(true);
     try {
       await createTrip({
         tourId,
@@ -101,34 +98,33 @@ export default function CreateTripScreen() {
         dropoffLocation: dropoffLocation.trim(),
         participantEmails: emails.map((email) => email.trim()).filter(Boolean),
         whaGroupLink: whaGroupLink.trim() || undefined,
-      })
+      });
       toast.show({
-        placement: 'bottom',
+        placement: "bottom",
         render: ({ id }) => (
           <Toast nativeID={`toast-${id}`} action="success">
             <ToastTitle>Trip created</ToastTitle>
           </Toast>
         ),
-      })
-      router.back()
+      });
+      router.back();
     } catch (error) {
-      const message =
-        error instanceof ConvexError ? String(error.data) : 'Could not create trip.'
+      const message = error instanceof ConvexError ? String(error.data) : "Could not create trip.";
       toast.show({
-        placement: 'top',
+        placement: "top",
         render: ({ id }) => (
           <Toast nativeID={`toast-${id}`} action="error">
             <ToastTitle>Couldn&apos;t save</ToastTitle>
             <ToastDescription>{message}</ToastDescription>
           </Toast>
         ),
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const selectedTourName = tours?.find((tour) => tour._id === tourId)?.name
+  const selectedTourName = tours?.find((tour) => tour._id === tourId)?.name;
 
   return (
     <ScrollView
@@ -139,9 +135,7 @@ export default function CreateTripScreen() {
       <Box className="w-full max-w-[420px]">
         <VStack space="4xl">
           <VStack space="xs">
-            <Heading className="text-3xl font-semibold text-typography-900">
-              New trip
-            </Heading>
+            <Heading className="text-3xl font-semibold text-typography-900">New trip</Heading>
             <Text className="text-sm text-typography-500">
               Book a route against one of your tours.
             </Text>
@@ -155,16 +149,16 @@ export default function CreateTripScreen() {
               </FormControlLabel>
               <Select
                 selectedValue={tourId}
-                onValueChange={(value) => setTourId(value as Id<'tours'>)}
+                onValueChange={(value) => setTourId(value as Id<"tours">)}
               >
                 <SelectTrigger size="lg" variant="outline">
                   <SelectInput
                     placeholder={
                       tours === undefined
-                        ? 'Loading tours…'
+                        ? "Loading tours…"
                         : tours.length === 0
-                          ? 'No tours yet — create one first'
-                          : 'Select a tour'
+                          ? "No tours yet — create one first"
+                          : "Select a tour"
                     }
                     value={selectedTourName}
                   />
@@ -248,9 +242,7 @@ export default function CreateTripScreen() {
               </Input>
               <FormControlError>
                 <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>
-                  Enter a whole number of 1 or more.
-                </FormControlErrorText>
+                <FormControlErrorText>Enter a whole number of 1 or more.</FormControlErrorText>
               </FormControlError>
             </FormControl>
 
@@ -295,7 +287,7 @@ export default function CreateTripScreen() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onPress={() => setEmails((current) => [...current, ''])}
+                  onPress={() => setEmails((current) => [...current, ""])}
                 >
                   <ButtonText>Add participant</ButtonText>
                 </Button>
@@ -310,5 +302,5 @@ export default function CreateTripScreen() {
         </VStack>
       </Box>
     </ScrollView>
-  )
+  );
 }

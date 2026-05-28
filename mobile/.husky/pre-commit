@@ -1,0 +1,5 @@
+# Git runs hooks from the repo root (PilloVan/), but lint-staged and the
+# mobile toolchain live in mobile/. Move there, then lint only the staged
+# files inside mobile/ (lint-staged scopes to the current working directory).
+cd mobile || exit 1
+npx lint-staged
