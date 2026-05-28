@@ -9,6 +9,8 @@
  */
 
 import type * as lib_users from "../lib/users.js";
+import type * as tours from "../tours.js";
+import type * as trips from "../trips.js";
 import type * as users from "../users.js";
 
 import type {
@@ -19,6 +21,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   "lib/users": typeof lib_users;
+  tours: typeof tours;
+  trips: typeof trips;
   users: typeof users;
 }>;
 
