@@ -20,3 +20,11 @@ export const genderValidator = v.union(
   v.literal("OTHER"),
 )
 export type GenderType = Infer<typeof genderValidator>
+
+export const tripStatusValidator = v.union(
+  v.literal("PENDING"),
+  v.literal("IN_PROGRESS"),
+  v.literal("COMPLETED"),
+  v.literal("CANCELLED"),
+)
+export type TripStatus = Infer<typeof tripStatusValidator>
