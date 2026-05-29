@@ -15,11 +15,8 @@ import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useSignIn } from "@clerk/expo";
-import { type Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
-
-const AUTH_REDIRECT_PATH = "/";
-const AUTH_REDIRECT_HREF = AUTH_REDIRECT_PATH as Href;
 
 export default function Page() {
   const { signIn, errors, fetchStatus } = useSignIn();
@@ -34,7 +31,7 @@ export default function Page() {
 
   const finalizeSignIn = async () => {
     await signIn.finalize({
-      navigate: ({ session, decorateUrl }) => {
+      navigate: ({ session }) => {
         // Handle session tasks
         // See https://clerk.com/docs/guides/development/custom-flows/authentication/session-tasks
         if (session?.currentTask) {
@@ -42,13 +39,11 @@ export default function Page() {
           return;
         }
 
-        // If no session tasks, navigate the signed-in user to the home page
-        const url = decorateUrl(AUTH_REDIRECT_PATH);
-        if (typeof url === "string" && url.startsWith("http")) {
-          router.replace(AUTH_REDIRECT_HREF);
-        } else {
-          router.replace(url as Href);
-        }
+        // No session tasks: let the root route gate (app/_layout.tsx) redirect
+        // the signed-in user to the correct destination once auth state updates.
+        // Navigating to "/" here would target the `index` route, which is gated
+        // behind the signed-out state and no longer mounted, triggering
+        // "The action REPLACE with payload {name:'index'} was not handled by any navigator".
       },
     });
   };
@@ -73,7 +68,7 @@ export default function Page() {
       // See https://clerk.com/docs/guides/development/custom-flows/authentication/client-trust
     } else {
       // Check why the sign-in is not complete
-      console.error("Sign-in attempt not complete:", signIn);
+      console.log("Sign-in attempt not complete:", signIn);
     }
   };
 
@@ -85,7 +80,7 @@ export default function Page() {
       await finalizeSignIn();
     } else {
       // Check why the sign-in is not complete
-      console.error("Sign-in attempt not complete:", signIn);
+      console.log("Sign-in attempt not complete:", signIn);
     }
   };
 
